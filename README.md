@@ -11,9 +11,13 @@ open the url it prints (usually http://localhost:4321).
 
 ## swap in photos
 
-drop files into `public/` and replace the [PHOTO] placeholder divs in `src/pages/index.astro` with:
+drop files into `public/` and set `src` in the `photos` list at the top of `src/pages/index.astro` (e.g. `'/trip.jpg'`). photos with an empty `src` stay hidden.
 
-    <img src="/yourfile.jpg" alt="describe the photo" />
+## placeholders and "coming soon"
+
+- anything written in `[BRACKETS]` is hidden on the page until you replace it
+- a link or resource with `href: '#'` shows "coming soon" instead of a dead link
+- "start here" and "what i actually use" only appear once they have real entries
 
 ## deploy (github + cloudflare, free)
 
@@ -34,4 +38,4 @@ domain registration stays at porkbun. cloudflare just handles dns and hosting.
 ## after it's live
 
 - put moneymolz.com in your instagram bio
-- replace the `#` links and the [ADD] lines
+- replace the `#` links and the [ADD] lines as each piece is ready

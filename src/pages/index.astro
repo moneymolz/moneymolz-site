@@ -14,6 +14,22 @@ const goal = { title: '300k by 30', current: 270, target: 300, date: 'feb 3' };
 const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
 const instagram = 'https://instagram.com/moneymolz';
 
+// about me. anything in [BRACKETS] is hidden until you replace it,
+// and a paragraph that's only a placeholder is left out.
+const about = [
+  "hi, i'm anmol. i've been posting about money on here since 2021, sharing my real numbers: net worth updates, what i'm investing in, and yes, the slow years too.",
+  '[ADD: why you started moneymolz, in your own words]',
+  "i'm based in brooklyn and work in tech. [ADD: something you love outside of money]",
+];
+
+// about photos: put files in /public, then set src like '/trip.jpg'. empty src = hidden.
+// with no photos, the about section switches to a text-only layout.
+const photos = [
+  { src: '', alt: 'you doing something you love' },
+  { src: '', alt: 'a trip or a favorite place' },
+  { src: '', alt: 'wide shot, friends or your setup', wide: true },
+];
+
 // "start here" stays hidden until you add at least one path.
 // example: { prompt: "i just got my first 401k", label: 'watch my 401k basics reel', href: 'https://...' },
 const startHere = [];
@@ -52,10 +68,15 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
 // anything still named like '[PLACEHOLDER]' is left off the page entirely.
 const hasUrl = (href) => Boolean(href) && href !== '#';
 const isPlaceholder = (text) => text.trim().startsWith('[');
+const stripPlaceholders = (text = '') => text.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
 const shownLinks = links.filter((l) => !isPlaceholder(l.label));
 const shownResources = resources
-  .map((g) => ({ ...g, items: g.items.filter((r) => !isPlaceholder(r.name)) }))
+  .map((g) => ({ ...g, items: g.items.filter((r) => !isPlaceholder(r.name)).map((r) => ({ ...r, why: stripPlaceholders(r.why) })) }))
   .filter((g) => g.items.length > 0);
+const aboutText = about
+  .map(stripPlaceholders)
+  .filter(Boolean);
+const aboutPhotos = photos.filter((ph) => ph.src);
 ---
 <!doctype html>
 <html lang="en">
@@ -146,20 +167,24 @@ const shownResources = resources
         </section>
       )}
 
-      <section id="about" class="about">
-        <div class="about-text">
-          <h2>about me</h2>
-          <p>hi, i'm anmol. i've been posting about money on here since 2021, sharing my real numbers: net worth updates, what i'm investing in, and yes, the slow years too.</p>
-          <p>[ADD: why you started moneymolz, in your own words]</p>
-          <p>i'm based in brooklyn and work in tech. [ADD: something you love outside of money]</p>
-        </div>
-        <div class="about-photos">
-          <!-- Replace these placeholders with real photos: put files in /public and use <img src="/yourfile.jpg" alt="..." /> -->
-          <div class="ph">[PHOTO: you doing something you love]</div>
-          <div class="ph">[PHOTO: a trip or a favorite place]</div>
-          <div class="ph wide">[PHOTO: wide shot, friends or your setup]</div>
-        </div>
-      </section>
+      {aboutPhotos.length > 0 ? (
+        <section id="about" class="about">
+          <div class="about-text">
+            <h2>about me</h2>
+            {aboutText.map((t) => <p>{t}</p>)}
+          </div>
+          <div class="about-photos">
+            {aboutPhotos.map((ph) => <img class:list={{ wide: ph.wide }} src={ph.src} alt={ph.alt} loading="lazy" />)}
+          </div>
+        </section>
+      ) : (
+        <section id="about" class="split">
+          <div class="split-head"><h2>about me</h2></div>
+          <div class="about-text">
+            {aboutText.map((t) => <p>{t}</p>)}
+          </div>
+        </section>
+      )}
 
       {shownResources.length > 0 && (
       <section id="resources" class="split">
@@ -177,12 +202,12 @@ const shownResources = resources
                     {hasUrl(r.href)
                       ? <a class="row" href={r.href}>
                           <span class="row-title">{r.name}</span>
-                          <span class="row-note">{r.why}</span>
+                          {r.why && <span class="row-note">{r.why}</span>}
                           {r.affiliate && <span class="row-flag">affiliate link</span>}
                         </a>
                       : <div class="row soon">
                           <span class="row-title">{r.name}</span>
-                          <span class="row-note">{r.why}</span>
+                          {r.why && <span class="row-note">{r.why}</span>}
                           <span class="row-flag">link coming soon</span>
                         </div>}
                   </li>
@@ -300,12 +325,8 @@ const shownResources = resources
   .about-text { display: flex; flex-direction: column; gap: 16px; }
   .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
   .about-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .ph {
-    height: 190px; border-radius: 12px; border: 1px dashed var(--kicker);
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 12px; font-size: 13px; color: var(--muted);
-  }
-  .ph.wide { display: none; }
+  .about-photos img { width: 100%; height: 190px; object-fit: cover; border-radius: 12px; display: block; }
+  .about-photos img.wide { grid-column: span 2; }
 
   /* start here + resources: heading beside divided rows */
   .split { display: flex; flex-direction: column; gap: 20px; }
@@ -358,8 +379,8 @@ const shownResources = resources
     .about-text { gap: 20px; }
     .about-text p { font-size: 18px; }
     .about-photos { gap: 14px; }
-    .ph { height: 280px; border-radius: 16px; font-size: 14px; }
-    .ph.wide { display: flex; grid-column: span 2; height: 220px; }
+    .about-photos img { height: 280px; border-radius: 16px; }
+    .about-photos img.wide { height: 220px; }
 
     .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .split h2 { font-size: 56px; }
