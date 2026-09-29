@@ -1,4 +1,6 @@
 ---
+import Analytics from '@vercel/analytics/astro';
+
 // ===== EDIT THESE =====
 const links = [
   { label: 'latest net worth update', href: '#', primary: true },
@@ -31,6 +33,7 @@ const pct = Math.round((goal.current / goal.target) * 100);
       href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <Analytics />
   </head>
   <body>
     <div class="page">
