@@ -99,6 +99,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
     <meta name="description" content="net worth updates, budget breakdowns, and the real numbers behind them." />
     <meta property="og:title" content="moneymolz" />
     <meta property="og:description" content="net worth updates, budget breakdowns, and the real numbers behind them." />
+    <script>document.documentElement.classList.add('js');</script>
     <meta property="og:image" content="/anmol.jpg" />
     <meta name="theme-color" content="#F6F1EE" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -137,13 +138,13 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         </div>
       </section>
 
-      <section class="goal" aria-labelledby="goal-title">
+      <section class="goal reveal" aria-labelledby="goal-title">
         <div class="goal-head">
           <h2 id="goal-title">{goal.title}</h2>
           <span class="goal-date">by {goal.date}</span>
         </div>
         <div class="goal-figures">
-          <span class="goal-now">${goal.current}k</span>
+          <span class="goal-now" data-count={goal.current}>${goal.current}k</span>
           <span class="goal-left">${toGo}k to go</span>
         </div>
         <div
@@ -154,7 +155,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
           aria-valuenow={goal.current}
           aria-valuetext={`$${goal.current}k of $${goal.target}k`}
         >
-          <div class="ruler-fill" style={`width:${pct}%`}></div>
+          <div class="ruler-fill" style={`width:${pct}%`} data-w={pct}></div>
         </div>
         <ol class="ticks" aria-hidden="true">
           {ticks.map((t) => <li>{t === 0 ? '$0' : `${t}k`}</li>)}
@@ -180,7 +181,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
       )}
 
       {aboutPhotos.length > 0 ? (
-        <section id="about" class="about">
+        <section id="about" class="about reveal">
           <div class="about-text">
             <h2>about me</h2>
             {aboutText.map((t) => <p>{t}</p>)}
@@ -190,7 +191,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
           </div>
         </section>
       ) : (
-        <section id="about" class="split">
+        <section id="about" class="split reveal">
           <div class="split-head"><h2>about me</h2></div>
           <div class="about-text">
             {aboutText.map((t) => <p>{t}</p>)}
@@ -199,9 +200,9 @@ const aboutPhotos = photos.filter((ph) => ph.src);
       )}
 
       <section id="money-map" class="mapwrap">
-        <div class="kicker">the money map</div>
-        <h2>where every paycheck goes</h2>
-        <p class="map-updated">updated {moneyMap.updated}</p>
+        <div class="kicker reveal">the money map</div>
+        <h2 class="reveal">where every paycheck goes</h2>
+        <p class="map-updated reveal">updated {moneyMap.updated}</p>
         <div class="map">
           <div class="map-node map-start">
             <span class="map-name">{moneyMap.start.name}</span>
@@ -261,19 +262,62 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         </div>
       </section>
 
-      <section class="topics">
+      <section class="topics reveal">
         <h2>what i post about</h2>
         <ul>
           {topics.map((t) => <li>{t}</li>)}
         </ul>
       </section>
 
-      <footer class="seen">
+      <footer class="seen reveal">
         <span class="seen-label">as seen on</span>
         <span class="seen-name">CNBC</span>
         <span class="seen-name">Acorns</span>
       </footer>
     </div>
+    <script>
+      (function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // scroll reveals + money map cascade
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+        document.querySelectorAll('.map').forEach(function (map) {
+          Array.prototype.forEach.call(map.children, function (child, i) {
+            child.style.transitionDelay = Math.min(i * 55, 800) + 'ms';
+          });
+          io.observe(map);
+        });
+
+        // goal ruler fills up
+        var fill = document.querySelector('.ruler-fill');
+        if (fill && fill.dataset.w) {
+          requestAnimationFrame(function () {
+            fill.style.setProperty('width', fill.dataset.w + '%', 'important');
+          });
+        }
+
+        // goal number counts up
+        var goalNow = document.querySelector('.goal-now');
+        if (goalNow && goalNow.dataset.count && !reduce) {
+          var target = parseInt(goalNow.dataset.count, 10);
+          var dur = 1200, t0 = null;
+          setTimeout(function () {
+            requestAnimationFrame(function tick(t) {
+              if (!t0) t0 = t;
+              var p = Math.min(1, (t - t0) / dur);
+              var eased = 1 - Math.pow(1 - p, 3);
+              goalNow.textContent = '$' + Math.round(target * eased) + 'k';
+              if (p < 1) requestAnimationFrame(tick);
+            });
+          }, 300);
+        }
+      })();
+    </script>
   </body>
 </html>
 
@@ -404,6 +448,24 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   .map-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
   .map-chips li { border: 1px solid var(--divider); background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 15px; color: var(--body); }
 
+  /* motion: entrance, scroll reveals, map cascade */
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  .hero-photo { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
+  .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
+
+  .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  .js .map > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .js .map.in > * { opacity: 1; transform: none; }
+  .js .map > .map-link { transform: scaleY(0); transform-origin: top center; }
+  .js .map.in > .map-link { transform: scaleY(1); }
+  .js .map.in > .map-node:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20, 20, 20, 0.08); }
+
+  .js .ruler-fill { width: 0 !important; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s; }
+
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
   .topics ul { border-top: 1px solid var(--divider); }
@@ -460,5 +522,6 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
+    .js .reveal, .js .map > * { opacity: 1 !important; transform: none !important; }
   }
 </style>
