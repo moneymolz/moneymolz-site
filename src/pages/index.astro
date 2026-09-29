@@ -5,7 +5,7 @@ import Analytics from '@vercel/analytics/astro';
 const links = [
   { label: 'latest net worth update', href: '#', primary: true },
   { label: 'join the newsletter', href: '#' },
-  { label: 'molz life: a peek at my dashboard (how-to coming soon)', href: '#' },
+  { label: 'molz life: a peek at my dashboard', href: '#' },
   { label: '[YOUR LINK]', href: '#' },
 ];
 
@@ -47,6 +47,15 @@ const resources = [
 const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
 const toGo = Math.max(0, goal.target - goal.current);
 const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) * i));
+
+// a link with href '' or '#' shows as "coming soon" instead of a dead link.
+// anything still named like '[PLACEHOLDER]' is left off the page entirely.
+const hasUrl = (href) => Boolean(href) && href !== '#';
+const isPlaceholder = (text) => text.trim().startsWith('[');
+const shownLinks = links.filter((l) => !isPlaceholder(l.label));
+const shownResources = resources
+  .map((g) => ({ ...g, items: g.items.filter((r) => !isPlaceholder(r.name)) }))
+  .filter((g) => g.items.length > 0);
 ---
 <!doctype html>
 <html lang="en">
@@ -84,8 +93,12 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
           <h1>the real numbers behind the money.</h1>
           <p>net worth updates, budget breakdowns, and the real numbers behind them.</p>
           <ul class="links">
-            {links.map((l) => (
-              <li><a class:list={['link', { primary: l.primary }]} href={l.href}>{l.label}</a></li>
+            {shownLinks.map((l) => (
+              <li>
+                {hasUrl(l.href)
+                  ? <a class:list={['link', { primary: l.primary }]} href={l.href}>{l.label}</a>
+                  : <span class="link soon">{l.label}<span class="soon-note">coming soon</span></span>}
+              </li>
             ))}
           </ul>
         </div>
@@ -124,10 +137,9 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
           <ul class="rows">
             {startHere.map((s) => (
               <li>
-                <a class="row" href={s.href}>
-                  <span class="row-title">{s.prompt}</span>
-                  <span class="row-note">{s.label}</span>
-                </a>
+                {hasUrl(s.href)
+                  ? <a class="row" href={s.href}><span class="row-title">{s.prompt}</span><span class="row-note">{s.label}</span></a>
+                  : <div class="row soon"><span class="row-title">{s.prompt}</span><span class="row-note">{s.label}</span><span class="row-flag">coming soon</span></div>}
               </li>
             ))}
           </ul>
@@ -149,23 +161,30 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
         </div>
       </section>
 
+      {shownResources.length > 0 && (
       <section id="resources" class="split">
         <div class="split-head">
           <h2>what i actually use</h2>
           <p>the accounts and apps behind my numbers. if a link pays me anything, it says so.</p>
         </div>
         <div class="groups">
-          {resources.map((g) => (
+          {shownResources.map((g) => (
             <div class="group">
               <h3>{g.group}</h3>
               <ul class="rows">
                 {g.items.map((r) => (
                   <li>
-                    <a class="row" href={r.href}>
-                      <span class="row-title">{r.name}</span>
-                      <span class="row-note">{r.why}</span>
-                      {r.affiliate && <span class="row-flag">affiliate link</span>}
-                    </a>
+                    {hasUrl(r.href)
+                      ? <a class="row" href={r.href}>
+                          <span class="row-title">{r.name}</span>
+                          <span class="row-note">{r.why}</span>
+                          {r.affiliate && <span class="row-flag">affiliate link</span>}
+                        </a>
+                      : <div class="row soon">
+                          <span class="row-title">{r.name}</span>
+                          <span class="row-note">{r.why}</span>
+                          <span class="row-flag">link coming soon</span>
+                        </div>}
                   </li>
                 ))}
               </ul>
@@ -173,6 +192,7 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
           ))}
         </div>
       </section>
+      )}
 
       <section class="topics">
         <h2>what i post about</h2>
@@ -243,13 +263,15 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
     display: flex; align-items: center; min-height: 60px; padding: 0 4px;
     text-decoration: none; font-size: 18px; font-weight: 500;
   }
-  .link:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  a.link:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
   .link.primary {
     background: var(--ink); color: var(--cream); border-radius: 10px;
     padding: 0 20px; margin: 10px 0;
   }
   .link.primary:hover { text-decoration: none; background: var(--body); }
   .link.primary:focus-visible { outline-offset: 2px; }
+  .link.soon { justify-content: space-between; gap: 16px; color: var(--muted); }
+  .soon-note { font-size: 14px; font-weight: 400; color: var(--kicker); white-space: nowrap; }
 
   /* goal ruler: the one loud element */
   .goal { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--ink); }
@@ -296,9 +318,10 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
   .rows li { border-bottom: 1px solid var(--divider); }
   .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; text-decoration: none; }
   .row-title { font-size: 18px; font-weight: 500; color: var(--ink); }
-  .row:hover .row-title { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  a.row:hover .row-title { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
   .row-note { font-size: 15px; color: var(--muted); }
   .row-flag { font-size: 13px; color: var(--kicker); }
+  .row.soon .row-title { color: var(--body); }
 
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
