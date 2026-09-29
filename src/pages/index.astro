@@ -34,30 +34,46 @@ const photos = [
 // example: { prompt: "i just got my first 401k", label: 'watch my 401k basics reel', href: 'https://...' },
 const startHere = [];
 
-// resources i actually use. set affiliate: true if the link earns you anything; it shows a small note.
-// remove a whole group by deleting it, or add new ones (budgeting, taxes, books...).
-const resources = [
-  {
-    group: 'banking',
-    items: [
-      { name: '[BANK NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
-      { name: '[HIGH-YIELD SAVINGS]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
-    ],
-  },
-  {
-    group: 'credit cards',
-    items: [
-      { name: '[CARD NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
-    ],
-  },
-  {
-    group: 'investing',
-    items: [
-      { name: '[BROKERAGE]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
-      { name: '[HSA PROVIDER]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
-    ],
-  },
-];
+// the money map: where every paycheck goes. names + one-line whys, no balances, no account numbers.
+// slide 2 of the moneymap post, as a living section. update names/whys here; the page redraws.
+const moneyMap = {
+  updated: 'september 2026',
+  start: { name: 'paycheck', why: 'lands every 15th and end of month' },
+  firstLabel: 'first',
+  first: [
+    { name: '401k - cresta plan (fidelity)', why: 'retirement first. maxing it out' },
+    { name: 'hsa', why: 'maxed' },
+  ],
+  hub: { name: 'robinhood checking', why: 'the hub. bills and rent flow out of here' },
+  hubLabel: 'from the hub',
+  branches: [
+    { name: 'robinhood savings', why: 'travel + gift buckets' },
+    { name: 'capital one 360 checking', why: 'zelle only. dad\u2019s $200/mo lands here' },
+    { name: 'fidelity brokerage', why: 'emergency fund + wedding bucket, in SGOV' },
+  ],
+  cardsLabel: 'credit cards',
+  cardsNote: 'all on autopay, paid off manually every payday',
+  cards: [
+    'chase sapphire preferred',
+    'chase freedom unlimited',
+    'united explorer card',
+    'world of hyatt credit card',
+    'bilt blue',
+    'u.s. bank altitude connect',
+    'robinhood credit card',
+  ],
+  investingLabel: 'investing',
+  investing: [
+    { name: 'robinhood traditional ira', why: '' },
+    { name: 'robinhood roth ira', why: '' },
+    { name: 'ny 529', why: '' },
+  ],
+  cashbackLabel: 'cashback apps',
+  cashback: [
+    { name: 'rakuten', why: 'cash back on stuff i\u2019d buy anyway' },
+    { name: 'fetch', why: 'points for snapping receipts' },
+  ],
+};
 // ======================
 
 const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
@@ -70,9 +86,6 @@ const hasUrl = (href) => Boolean(href) && href !== '#';
 const isPlaceholder = (text) => text.trim().startsWith('[');
 const stripPlaceholders = (text = '') => text.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
 const shownLinks = links.filter((l) => !isPlaceholder(l.label));
-const shownResources = resources
-  .map((g) => ({ ...g, items: g.items.filter((r) => !isPlaceholder(r.name)).map((r) => ({ ...r, why: stripPlaceholders(r.why) })) }))
-  .filter((g) => g.items.length > 0);
 const aboutText = about
   .map(stripPlaceholders)
   .filter(Boolean);
@@ -186,38 +199,68 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         </section>
       )}
 
-      {shownResources.length > 0 && (
-      <section id="resources" class="split">
-        <div class="split-head">
-          <h2>what i actually use</h2>
-          <p>the accounts and apps behind my numbers. if a link pays me anything, it says so.</p>
-        </div>
-        <div class="groups">
-          {shownResources.map((g) => (
-            <div class="group">
-              <h3>{g.group}</h3>
-              <ul class="rows">
-                {g.items.map((r) => (
-                  <li>
-                    {hasUrl(r.href)
-                      ? <a class="row" href={r.href}>
-                          <span class="row-title">{r.name}</span>
-                          {r.why && <span class="row-note">{r.why}</span>}
-                          {r.affiliate && <span class="row-flag">affiliate link</span>}
-                        </a>
-                      : <div class="row soon">
-                          <span class="row-title">{r.name}</span>
-                          {r.why && <span class="row-note">{r.why}</span>}
-                          <span class="row-flag">link coming soon</span>
-                        </div>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      <section id="money-map" class="mapwrap">
+        <div class="kicker">the money map</div>
+        <h2>where every paycheck goes</h2>
+        <p class="map-updated">updated {moneyMap.updated}</p>
+        <div class="map">
+          <div class="map-node map-start">
+            <span class="map-name">{moneyMap.start.name}</span>
+            <span class="map-why">{moneyMap.start.why}</span>
+          </div>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-tag">{moneyMap.firstLabel}</div>
+          <div class="map-row">
+            {moneyMap.first.map((n) => (
+              <div class="map-node">
+                <span class="map-name">{n.name}</span>
+                <span class="map-why">{n.why}</span>
+              </div>
+            ))}
+          </div>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-node map-hub">
+            <span class="map-name">{moneyMap.hub.name}</span>
+            <span class="map-why">{moneyMap.hub.why}</span>
+          </div>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-tag">{moneyMap.hubLabel}</div>
+          <div class="map-row">
+            {moneyMap.branches.map((n) => (
+              <div class="map-node">
+                <span class="map-name">{n.name}</span>
+                <span class="map-why">{n.why}</span>
+              </div>
+            ))}
+          </div>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-tag">{moneyMap.cardsLabel}</div>
+          <p class="map-note">{moneyMap.cardsNote}</p>
+          <ul class="map-chips">
+            {moneyMap.cards.map((c) => <li>{c}</li>)}
+          </ul>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-tag">{moneyMap.investingLabel}</div>
+          <div class="map-row">
+            {moneyMap.investing.map((n) => (
+              <div class="map-node">
+                <span class="map-name">{n.name}</span>
+                {n.why && <span class="map-why">{n.why}</span>}
+              </div>
+            ))}
+          </div>
+          <div class="map-link" aria-hidden="true"></div>
+          <div class="map-tag">{moneyMap.cashbackLabel}</div>
+          <div class="map-row">
+            {moneyMap.cashback.map((n) => (
+              <div class="map-node">
+                <span class="map-name">{n.name}</span>
+                <span class="map-why">{n.why}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-      )}
 
       <section class="topics">
         <h2>what i post about</h2>
@@ -329,7 +372,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   .about-photos img { width: 100%; height: 190px; object-fit: cover; border-radius: 12px; display: block; }
   .about-photos img.wide { grid-column: span 2; }
 
-  /* start here + resources: heading beside divided rows */
+  /* start here: heading beside divided rows */
   .split { display: flex; flex-direction: column; gap: 20px; }
   .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
   .split-head { display: flex; flex-direction: column; gap: 12px; }
@@ -344,6 +387,23 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   .row-note { font-size: 15px; color: var(--muted); }
   .row-flag { font-size: 13px; color: var(--kicker); }
   .row.soon .row-title { color: var(--body); }
+
+  /* money map */
+  .mapwrap { display: flex; flex-direction: column; gap: 12px; }
+  .mapwrap h2 { margin: 0; font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .map-updated { margin: 0; font-size: 14px; letter-spacing: 0.14em; color: var(--kicker); }
+  .map { display: flex; flex-direction: column; align-items: stretch; margin-top: 12px; }
+  .map-node { background: #fff; border: 1px solid var(--divider); border-radius: 14px; padding: 14px 16px; }
+  .map-start { background: linear-gradient(135deg, var(--peach), var(--mint)); border: none; text-align: center; }
+  .map-hub { border: 1.5px solid var(--ink); }
+  .map-name { display: block; font-family: var(--display); font-size: 20px; color: var(--ink); }
+  .map-why { display: block; margin-top: 4px; font-size: 14px; color: var(--muted); }
+  .map-link { width: 2px; height: 20px; margin: 0 auto; background: linear-gradient(to bottom, var(--peach), var(--mint)); flex: none; }
+  .map-tag { align-self: center; padding: 8px 0 10px; font-size: 14px; letter-spacing: 0.14em; color: var(--kicker); }
+  .map-row { display: grid; gap: 10px; }
+  .map-note { margin: 0 0 10px; text-align: center; font-size: 15px; color: var(--muted); }
+  .map-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .map-chips li { border: 1px solid var(--divider); background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 15px; color: var(--body); }
 
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
@@ -387,6 +447,10 @@ const aboutPhotos = photos.filter((ph) => ph.src);
     .split h2 { font-size: 56px; }
     .split-head p { font-size: 18px; }
     .groups { gap: 36px; }
+
+    .mapwrap h2 { font-size: 56px; }
+    .map { max-width: 720px; width: 100%; margin-left: auto; margin-right: auto; }
+    .map-row { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 
     .topics { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .topics h2 { font-size: 40px; }
