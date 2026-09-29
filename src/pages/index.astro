@@ -5,16 +5,78 @@ import Analytics from '@vercel/analytics/astro';
 const links = [
   { label: 'latest net worth update', href: '#', primary: true },
   { label: 'join the newsletter', href: '#' },
-  { label: 'molz life (my money dashboard)', href: '#' },
+  { label: 'molz life: a peek at my dashboard', href: '#' },
   { label: '[YOUR LINK]', href: '#' },
 ];
 
-const goal = { title: '300k nw by 30', current: 270, target: 300, date: 'feb 3' };
+// current and target are in $k. date shows as "by feb 3".
+const goal = { title: '300k by 30', current: 270, target: 300, date: 'feb 3' };
 const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
 const instagram = 'https://instagram.com/moneymolz';
+
+// about me. anything in [BRACKETS] is hidden until you replace it,
+// and a paragraph that's only a placeholder is left out.
+const about = [
+  "hi, i'm anmol. i've been posting about money on here since 2021, sharing my real numbers: net worth updates, what i'm investing in, and yes, the slow years too.",
+  '[ADD: why you started moneymolz, in your own words]',
+  "i'm based in brooklyn and work in tech. [ADD: something you love outside of money]",
+];
+
+// about photos: put files in /public, then set src like '/trip.jpg'. empty src = hidden.
+// with no photos, the about section switches to a text-only layout.
+const photos = [
+  { src: '', alt: 'you doing something you love' },
+  { src: '', alt: 'a trip or a favorite place' },
+  { src: '', alt: 'wide shot, friends or your setup', wide: true },
+];
+
+// "start here" stays hidden until you add at least one path.
+// example: { prompt: "i just got my first 401k", label: 'watch my 401k basics reel', href: 'https://...' },
+const startHere = [];
+
+// resources i actually use. set affiliate: true if the link earns you anything; it shows a small note.
+// remove a whole group by deleting it, or add new ones (budgeting, taxes, books...).
+const resources = [
+  {
+    group: 'banking',
+    items: [
+      { name: '[BANK NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+      { name: '[HIGH-YIELD SAVINGS]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+  {
+    group: 'credit cards',
+    items: [
+      { name: '[CARD NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+  {
+    group: 'investing',
+    items: [
+      { name: '[BROKERAGE]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+      { name: '[HSA PROVIDER]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+];
 // ======================
 
-const pct = Math.round((goal.current / goal.target) * 100);
+const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
+const toGo = Math.max(0, goal.target - goal.current);
+const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) * i));
+
+// a link with href '' or '#' shows as "coming soon" instead of a dead link.
+// anything still named like '[PLACEHOLDER]' is left off the page entirely.
+const hasUrl = (href) => Boolean(href) && href !== '#';
+const isPlaceholder = (text) => text.trim().startsWith('[');
+const stripPlaceholders = (text = '') => text.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+const shownLinks = links.filter((l) => !isPlaceholder(l.label));
+const shownResources = resources
+  .map((g) => ({ ...g, items: g.items.filter((r) => !isPlaceholder(r.name)).map((r) => ({ ...r, why: stripPlaceholders(r.why) })) }))
+  .filter((g) => g.items.length > 0);
+const aboutText = about
+  .map(stripPlaceholders)
+  .filter(Boolean);
+const aboutPhotos = photos.filter((ph) => ph.src);
 ---
 <!doctype html>
 <html lang="en">
@@ -26,6 +88,7 @@ const pct = Math.round((goal.current / goal.target) * 100);
     <meta property="og:title" content="moneymolz" />
     <meta property="og:description" content="net worth updates, budget breakdowns, and the real numbers behind them." />
     <meta property="og:image" content="/anmol.jpg" />
+    <meta name="theme-color" content="#F6F1EE" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,8 +100,8 @@ const pct = Math.round((goal.current / goal.target) * 100);
   </head>
   <body>
     <div class="page">
-      <header class="nav">
-        <span class="logo">moneymolz</span>
+      <header class="top">
+        <span class="kicker">moneymolz</span>
         <nav>
           <a href="#about">about</a>
           <a href={instagram}>instagram</a>
@@ -46,53 +109,121 @@ const pct = Math.round((goal.current / goal.target) * 100);
       </header>
 
       <section class="hero">
-        <div class="hero-text">
-          <h1 class="hero-title-desktop">the real numbers behind the money.</h1>
-          <h1 class="hero-title-mobile">moneymolz</h1>
-          <p>net worth updates, budget breakdowns, and the real numbers behind them.</p>
-        </div>
         <img class="hero-photo" src="/anmol.jpg" alt="Anmol smiling on a dock" width="538" height="832" />
+        <div class="hero-text">
+          <h1>the real numbers behind the money.</h1>
+          <p>net worth updates, budget breakdowns, and the real numbers behind them.</p>
+          <ul class="links">
+            {shownLinks.map((l) => (
+              <li>
+                {hasUrl(l.href)
+                  ? <a class:list={['link', { primary: l.primary }]} href={l.href}>{l.label}</a>
+                  : <span class="link soon">{l.label}<span class="soon-note">coming soon</span></span>}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section class="links-row">
-        <div class="links">
-          {links.map((l) => (
-            <a class:list={['pill', { primary: l.primary }]} href={l.href}>{l.label}</a>
+      <section class="goal" aria-labelledby="goal-title">
+        <div class="goal-head">
+          <h2 id="goal-title">{goal.title}</h2>
+          <span class="goal-date">by {goal.date}</span>
+        </div>
+        <div class="goal-figures">
+          <span class="goal-now">${goal.current}k</span>
+          <span class="goal-left">${toGo}k to go</span>
+        </div>
+        <div
+          class="ruler"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax={goal.target}
+          aria-valuenow={goal.current}
+          aria-valuetext={`$${goal.current}k of $${goal.target}k`}
+        >
+          <div class="ruler-fill" style={`width:${pct}%`}></div>
+        </div>
+        <ol class="ticks" aria-hidden="true">
+          {ticks.map((t) => <li>{t === 0 ? '$0' : `${t}k`}</li>)}
+        </ol>
+      </section>
+
+      {startHere.length > 0 && (
+        <section id="start" class="split">
+          <div class="split-head">
+            <h2>start here</h2>
+            <p>new to all this? pick the one that sounds like you.</p>
+          </div>
+          <ul class="rows">
+            {startHere.map((s) => (
+              <li>
+                {hasUrl(s.href)
+                  ? <a class="row" href={s.href}><span class="row-title">{s.prompt}</span><span class="row-note">{s.label}</span></a>
+                  : <div class="row soon"><span class="row-title">{s.prompt}</span><span class="row-note">{s.label}</span><span class="row-flag">coming soon</span></div>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {aboutPhotos.length > 0 ? (
+        <section id="about" class="about">
+          <div class="about-text">
+            <h2>about me</h2>
+            {aboutText.map((t) => <p>{t}</p>)}
+          </div>
+          <div class="about-photos">
+            {aboutPhotos.map((ph) => <img class:list={{ wide: ph.wide }} src={ph.src} alt={ph.alt} loading="lazy" />)}
+          </div>
+        </section>
+      ) : (
+        <section id="about" class="split">
+          <div class="split-head"><h2>about me</h2></div>
+          <div class="about-text">
+            {aboutText.map((t) => <p>{t}</p>)}
+          </div>
+        </section>
+      )}
+
+      {shownResources.length > 0 && (
+      <section id="resources" class="split">
+        <div class="split-head">
+          <h2>what i actually use</h2>
+          <p>the accounts and apps behind my numbers. if a link pays me anything, it says so.</p>
+        </div>
+        <div class="groups">
+          {shownResources.map((g) => (
+            <div class="group">
+              <h3>{g.group}</h3>
+              <ul class="rows">
+                {g.items.map((r) => (
+                  <li>
+                    {hasUrl(r.href)
+                      ? <a class="row" href={r.href}>
+                          <span class="row-title">{r.name}</span>
+                          {r.why && <span class="row-note">{r.why}</span>}
+                          {r.affiliate && <span class="row-flag">affiliate link</span>}
+                        </a>
+                      : <div class="row soon">
+                          <span class="row-title">{r.name}</span>
+                          {r.why && <span class="row-note">{r.why}</span>}
+                          <span class="row-flag">link coming soon</span>
+                        </div>}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
-        <div class="card">
-          <div class="card-top">
-            <span class="card-title">{goal.title}</span>
-            <span class="date"><i class="dot"></i>{goal.date}</span>
-          </div>
-          <div class="track"><div class="fill" style={`width:${pct}%`}></div></div>
-          <div class="card-bottom">
-            <strong>${goal.current}k</strong>
-            <span>${goal.target}k</span>
-          </div>
-        </div>
       </section>
-
-      <section id="about" class="about">
-        <div class="about-text">
-          <h2>about me</h2>
-          <p>hi, i'm anmol. i've been posting about money on here since 2021, sharing my real numbers: net worth updates, what i'm investing in, and yes, the slow years too.</p>
-          <p>[ADD: why you started moneymolz, in your own words]</p>
-          <p>i'm based in brooklyn and work in tech. [ADD: something you love outside of money]</p>
-        </div>
-        <div class="about-photos">
-          <!-- Replace these placeholders with real photos: put files in /public and use <img src="/yourfile.jpg" alt="..." /> -->
-          <div class="ph tan">[PHOTO: you doing something you love]</div>
-          <div class="ph teal">[PHOTO: a trip or a favorite place]</div>
-          <div class="ph lilac wide">[PHOTO: wide shot, friends or your setup]</div>
-        </div>
-      </section>
+      )}
 
       <section class="topics">
         <h2>what i post about</h2>
-        <div class="chips">
-          {topics.map((t) => <span class="chip">{t}</span>)}
-        </div>
+        <ul>
+          {topics.map((t) => <li>{t}</li>)}
+        </ul>
       </section>
 
       <footer class="seen">
@@ -106,111 +237,164 @@ const pct = Math.round((goal.current / goal.target) * 100);
 
 <style is:global>
   :root {
-    --bg: #f4f1ec;
+    --cream: #F6F1EE;
     --ink: #141414;
-    --muted: #3a3833;
-    --soft: #7b7565;
-    --tan: #e3dccb;
-    --accent: #ff8c4a;
+    --body: #3A372F;
+    --muted: #6B6455;
+    --divider: #E3DCCD;
+    --kicker: #8A8172;
+    --peach: #F2DBBC;
+    --mint: #CFE3E1;
+
+    --display: 'PT Serif', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--body);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
   }
   a { color: var(--ink); }
-  h1, h2, .logo, .card-title, .seen-name, .card-bottom strong {
-    font-family: 'PT Serif', Georgia, serif;
-    font-weight: 400;
+  a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+  h1, h2 { font-family: var(--display); font-weight: 400; color: var(--ink); margin: 0; }
+  ul, ol { list-style: none; margin: 0; padding: 0; }
+
+  .page { max-width: 1160px; margin: 0 auto; padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 56px; }
+
+  /* top bar */
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .kicker { font-size: 15px; font-weight: 500; color: var(--kicker); letter-spacing: 0.02em; }
+  .top nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
+  .top a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
+  .top a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* hero */
+  .hero { display: flex; flex-direction: column; gap: 28px; margin-top: -32px; }
+  .hero-photo { width: 100%; height: 360px; object-fit: cover; object-position: 50% 22%; border-radius: 14px; display: block; }
+  .hero-text { display: flex; flex-direction: column; gap: 16px; }
+  .hero h1 { font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; }
+  .hero p { margin: 0; max-width: 34ch; color: var(--muted); }
+
+  /* links: a list, not a stack of pills */
+  .links { margin-top: 12px; border-top: 1px solid var(--divider); }
+  .links li { border-bottom: 1px solid var(--divider); }
+  .link {
+    display: flex; align-items: center; min-height: 60px; padding: 0 4px;
+    text-decoration: none; font-size: 18px; font-weight: 500;
   }
-
-  .page { max-width: 1280px; margin: 0 auto; padding: 40px 28px; display: flex; flex-direction: column; gap: 40px; }
-
-  .nav { display: none; }
-  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
-  .hero-photo { order: -1; width: 100%; height: 400px; object-fit: cover; object-position: 50% 25%; border-radius: 200px 200px 24px 24px; }
-  .hero-text { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-  .hero-title-desktop { display: none; }
-  .hero-title-mobile { margin: 0; font-size: 46px; line-height: 1; letter-spacing: -0.5px; }
-  .hero-text p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 290px; }
-
-  .links-row { display: flex; flex-direction: column; gap: 40px; }
-  .links { display: flex; flex-direction: column; gap: 12px; }
-  .pill {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 54px; padding: 0 20px; border-radius: 27px;
-    background: var(--tan); text-decoration: none; font-weight: 500; font-size: 16px;
-    transition: transform 0.15s ease;
+  a.link:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  .link.primary {
+    background: var(--ink); color: var(--cream); border-radius: 10px;
+    padding: 0 20px; margin: 10px 0;
   }
-  .pill:hover { transform: translateY(-2px); }
-  .pill.primary { background: var(--ink); color: var(--bg); }
+  .link.primary:hover { text-decoration: none; background: var(--body); }
+  .link.primary:focus-visible { outline-offset: 2px; }
+  .link.soon { justify-content: space-between; gap: 16px; color: var(--muted); }
+  .soon-note { font-size: 14px; font-weight: 400; color: var(--kicker); white-space: nowrap; }
 
-  .card { background: #fff; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
-  .card-top { display: flex; align-items: center; justify-content: space-between; }
-  .card-title { font-size: 22px; }
-  .date { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
-  .dot { display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-  .track { height: 20px; border-radius: 10px; background: var(--tan); }
-  .fill { height: 100%; border-radius: 10px; background: var(--ink); }
-  .card-bottom { display: flex; justify-content: space-between; color: var(--soft); font-size: 16px; }
-  .card-bottom strong { font-weight: 700; font-size: 18px; color: var(--ink); }
+  /* goal ruler: the one loud element */
+  .goal { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--ink); }
+  .goal-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .goal h2 { font-size: 24px; }
+  .goal-date { font-size: 15px; color: var(--muted); }
+  .goal-figures { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .goal-now { font-family: var(--display); color: var(--ink); font-size: 76px; line-height: 1; letter-spacing: -0.03em; }
+  .goal-left { font-size: 16px; font-weight: 500; color: var(--body); white-space: nowrap; }
+  .ruler {
+    position: relative; height: 36px; margin-top: 8px;
+    border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 calc(100% / 6 - 1px), var(--divider) calc(100% / 6 - 1px) calc(100% / 6));
+  }
+  .ruler-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--peach), var(--mint));
+    border-right: 1.5px solid var(--ink);
+  }
+  .ticks { display: flex; justify-content: space-between; font-size: 13px; color: var(--kicker); }
 
-  .about { display: flex; flex-direction: column; gap: 20px; }
-  .about h2, .topics h2 { margin: 0; font-size: 36px; line-height: 1; }
-  .about-text { display: flex; flex-direction: column; gap: 20px; }
-  .about-text p { margin: 0; font-size: 16px; line-height: 1.65; color: var(--muted); }
-  .about-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .ph { height: 200px; border-radius: 16px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px; font-size: 13px; }
-  .ph.tan { background: #e3dccb; color: #5c5749; }
-  .ph.teal { background: #d5e6e6; color: #3d5254; }
-  .ph.lilac { background: #f0dcf2; color: #5f4a63; display: none; }
+  /* about */
+  .about { display: flex; flex-direction: column; gap: 24px; }
+  .about h2, .topics h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .about-text { display: flex; flex-direction: column; gap: 16px; }
+  .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
+  .about-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .about-photos img { width: 100%; height: 190px; object-fit: cover; border-radius: 12px; display: block; }
+  .about-photos img.wide { grid-column: span 2; }
 
+  /* start here + resources: heading beside divided rows */
+  .split { display: flex; flex-direction: column; gap: 20px; }
+  .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .split-head { display: flex; flex-direction: column; gap: 12px; }
+  .split-head p { margin: 0; max-width: 36ch; color: var(--muted); }
+  .groups { display: flex; flex-direction: column; gap: 28px; }
+  .group h3 { margin: 0 0 8px; font-size: 15px; font-weight: 500; color: var(--kicker); }
+  .rows { border-top: 1px solid var(--divider); }
+  .rows li { border-bottom: 1px solid var(--divider); }
+  .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; text-decoration: none; }
+  .row-title { font-size: 18px; font-weight: 500; color: var(--ink); }
+  a.row:hover .row-title { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .row-note { font-size: 15px; color: var(--muted); }
+  .row-flag { font-size: 13px; color: var(--kicker); }
+  .row.soon .row-title { color: var(--body); }
+
+  /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-  .chip { padding: 10px 16px; border-radius: 22px; background: #fff; font-size: 15px; }
+  .topics ul { border-top: 1px solid var(--divider); }
+  .topics li { padding: 14px 4px; border-bottom: 1px solid var(--divider); font-size: 18px; color: var(--ink); }
 
-  .seen { display: flex; align-items: center; justify-content: center; gap: 26px; margin-top: auto; flex-wrap: wrap; }
-  .seen-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--soft); width: 100%; text-align: center; }
-  .seen-name { font-size: 24px; }
+  /* footer */
+  .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--divider); }
+  .seen-label { width: 100%; font-size: 15px; color: var(--kicker); }
+  .seen-name { font-family: var(--display); font-size: 24px; color: var(--ink); }
 
   @media (min-width: 900px) {
-    .page { padding: 48px 96px 56px; gap: 72px; }
-    .nav { display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-size: 26px; }
-    .nav nav { display: flex; gap: 28px; font-size: 15px; font-weight: 500; }
-    .nav a { text-decoration: none; display: flex; align-items: center; min-height: 44px; }
+    .page { padding: 32px 48px 64px; gap: 96px; }
 
-    .hero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 96px; align-items: center; text-align: left; }
-    .hero-photo { order: 0; height: 620px; border-radius: 320px 320px 28px 28px; }
-    .hero-text { align-items: flex-start; gap: 28px; }
-    .hero-title-mobile { display: none; }
-    .hero-title-desktop { display: block; margin: 0; font-size: 84px; line-height: 1.02; letter-spacing: -1.5px; }
-    .hero-text p { font-size: 19px; line-height: 1.55; max-width: 460px; }
+    .hero {
+      display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: 72px; align-items: end; margin-top: -24px;
+    }
+    .hero-photo { height: 640px; border-radius: 18px; }
+    .hero-text { gap: 20px; padding-bottom: 8px; }
+    .hero h1 { font-size: 80px; line-height: 0.98; }
+    .hero p { font-size: 19px; }
+    .links { margin-top: 20px; }
 
-    .links-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 96px; align-items: start; }
-    .pill { min-height: 58px; font-size: 17px; border-radius: 29px; }
-    .card { padding: 28px; border-radius: 22px; gap: 18px; }
-    .card-title { font-size: 28px; }
-    .date { font-size: 14px; }
-    .track { height: 22px; border-radius: 11px; }
-    .card-bottom { font-size: 18px; }
-    .card-bottom strong { font-size: 20px; }
+    .goal { gap: 12px; padding-top: 32px; }
+    .goal h2 { font-size: 30px; }
+    .goal-date, .goal-left { font-size: 18px; }
+    .goal-now { font-size: 168px; line-height: 0.9; }
+    .ruler { height: 56px; border-radius: 8px; }
+    .ticks { font-size: 14px; }
 
-    .about { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 96px; align-items: start; }
+    .about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .about h2 { font-size: 56px; }
-    .about-text { gap: 22px; }
-    .about-text p { font-size: 18px; line-height: 1.7; max-width: 480px; }
-    .about-photos { gap: 16px; }
-    .ph { height: 300px; border-radius: 20px; font-size: 14px; }
-    .ph.lilac { display: flex; grid-column: span 2; height: 240px; }
+    .about-text { gap: 20px; }
+    .about-text p { font-size: 18px; }
+    .about-photos { gap: 14px; }
+    .about-photos img { height: 280px; border-radius: 16px; }
+    .about-photos img.wide { height: 220px; }
 
+    .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
+    .split h2 { font-size: 56px; }
+    .split-head p { font-size: 18px; }
+    .groups { gap: 36px; }
+
+    .topics { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .topics h2 { font-size: 40px; }
-    .chips { gap: 12px; }
-    .chip { padding: 12px 20px; border-radius: 24px; font-size: 16px; }
 
-    .seen { justify-content: flex-start; gap: 28px; flex-wrap: nowrap; }
-    .seen-label { width: auto; text-align: left; }
+    .seen { flex-wrap: nowrap; gap: 28px; }
+    .seen-label { width: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
   }
 </style>
