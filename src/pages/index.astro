@@ -93,7 +93,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <Analytics />
@@ -246,8 +246,8 @@ const aboutPhotos = photos.filter((ph) => ph.src);
     --peach: #F2DBBC;
     --mint: #CFE3E1;
 
-    --display: 'PT Serif', Georgia, serif;
-    --sans: 'Inter', system-ui, sans-serif;
+    --display: 'Young Serif', Georgia, serif;
+    --sans: 'Figtree', system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
   body {
@@ -256,6 +256,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
     color: var(--body);
     font-family: var(--sans);
     font-size: 17px;
+    font-weight: 300;
     line-height: 1.55;
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
@@ -269,7 +270,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
   /* top bar */
   .top { display: flex; align-items: center; justify-content: space-between; }
-  .kicker { font-size: 15px; font-weight: 500; color: var(--kicker); letter-spacing: 0.02em; }
+  .kicker { font-size: 15px; font-weight: 400; color: var(--kicker); letter-spacing: 0.22em; }
   .top nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
   .top a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
   .top a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -334,7 +335,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   .split-head { display: flex; flex-direction: column; gap: 12px; }
   .split-head p { margin: 0; max-width: 36ch; color: var(--muted); }
   .groups { display: flex; flex-direction: column; gap: 28px; }
-  .group h3 { margin: 0 0 8px; font-size: 15px; font-weight: 500; color: var(--kicker); }
+  .group h3 { margin: 0 0 8px; font-size: 15px; font-weight: 400; letter-spacing: 0.06em; color: var(--kicker); }
   .rows { border-top: 1px solid var(--divider); }
   .rows li { border-bottom: 1px solid var(--divider); }
   .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; text-decoration: none; }
@@ -351,7 +352,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
   /* footer */
   .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--divider); }
-  .seen-label { width: 100%; font-size: 15px; color: var(--kicker); }
+  .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: var(--kicker); }
   .seen-name { font-family: var(--display); font-size: 24px; color: var(--ink); }
 
   @media (min-width: 900px) {
