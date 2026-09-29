@@ -13,6 +13,35 @@ const links = [
 const goal = { title: '300k by 30', current: 270, target: 300, date: 'feb 3' };
 const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
 const instagram = 'https://instagram.com/moneymolz';
+
+// "start here" stays hidden until you add at least one path.
+// example: { prompt: "i just got my first 401k", label: 'watch my 401k basics reel', href: 'https://...' },
+const startHere = [];
+
+// resources i actually use. set affiliate: true if the link earns you anything; it shows a small note.
+// remove a whole group by deleting it, or add new ones (budgeting, taxes, books...).
+const resources = [
+  {
+    group: 'banking',
+    items: [
+      { name: '[BANK NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+      { name: '[HIGH-YIELD SAVINGS]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+  {
+    group: 'credit cards',
+    items: [
+      { name: '[CARD NAME]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+  {
+    group: 'investing',
+    items: [
+      { name: '[BROKERAGE]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+      { name: '[HSA PROVIDER]', why: '[ADD: one line on why you use it]', href: '#', affiliate: false },
+    ],
+  },
+];
 // ======================
 
 const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
@@ -86,6 +115,25 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
         </ol>
       </section>
 
+      {startHere.length > 0 && (
+        <section id="start" class="split">
+          <div class="split-head">
+            <h2>start here</h2>
+            <p>new to all this? pick the one that sounds like you.</p>
+          </div>
+          <ul class="rows">
+            {startHere.map((s) => (
+              <li>
+                <a class="row" href={s.href}>
+                  <span class="row-title">{s.prompt}</span>
+                  <span class="row-note">{s.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section id="about" class="about">
         <div class="about-text">
           <h2>about me</h2>
@@ -98,6 +146,31 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
           <div class="ph">[PHOTO: you doing something you love]</div>
           <div class="ph">[PHOTO: a trip or a favorite place]</div>
           <div class="ph wide">[PHOTO: wide shot, friends or your setup]</div>
+        </div>
+      </section>
+
+      <section id="resources" class="split">
+        <div class="split-head">
+          <h2>what i actually use</h2>
+          <p>the accounts and apps behind my numbers. if a link pays me anything, it says so.</p>
+        </div>
+        <div class="groups">
+          {resources.map((g) => (
+            <div class="group">
+              <h3>{g.group}</h3>
+              <ul class="rows">
+                {g.items.map((r) => (
+                  <li>
+                    <a class="row" href={r.href}>
+                      <span class="row-title">{r.name}</span>
+                      <span class="row-note">{r.why}</span>
+                      {r.affiliate && <span class="row-flag">affiliate link</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -212,6 +285,21 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
   }
   .ph.wide { display: none; }
 
+  /* start here + resources: heading beside divided rows */
+  .split { display: flex; flex-direction: column; gap: 20px; }
+  .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .split-head { display: flex; flex-direction: column; gap: 12px; }
+  .split-head p { margin: 0; max-width: 36ch; color: var(--muted); }
+  .groups { display: flex; flex-direction: column; gap: 28px; }
+  .group h3 { margin: 0 0 8px; font-size: 15px; font-weight: 500; color: var(--kicker); }
+  .rows { border-top: 1px solid var(--divider); }
+  .rows li { border-bottom: 1px solid var(--divider); }
+  .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; text-decoration: none; }
+  .row-title { font-size: 18px; font-weight: 500; color: var(--ink); }
+  .row:hover .row-title { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .row-note { font-size: 15px; color: var(--muted); }
+  .row-flag { font-size: 13px; color: var(--kicker); }
+
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
   .topics ul { border-top: 1px solid var(--divider); }
@@ -249,6 +337,11 @@ const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) *
     .about-photos { gap: 14px; }
     .ph { height: 280px; border-radius: 16px; font-size: 14px; }
     .ph.wide { display: flex; grid-column: span 2; height: 220px; }
+
+    .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
+    .split h2 { font-size: 56px; }
+    .split-head p { font-size: 18px; }
+    .groups { gap: 36px; }
 
     .topics { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .topics h2 { font-size: 40px; }
