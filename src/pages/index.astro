@@ -89,6 +89,14 @@ const aboutText = about
   .map(stripPlaceholders)
   .filter(Boolean);
 const aboutPhotos = photos.filter((ph) => ph.src);
+
+// diary layout: first about paragraph becomes the hero lede (with drop cap),
+// the rest stays in the about section.
+const lede = aboutText[0] ?? '';
+const aboutRest = aboutText.slice(1);
+
+// build-time dateline, e.g. "september 2026". refreshes on every deploy.
+const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
 ---
 <!doctype html>
 <html lang="en">
@@ -113,19 +121,24 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   </head>
   <body>
     <div class="page">
-      <header class="top">
-        <span class="kicker">moneymolz</span>
-        <nav>
-          <a href="#about">about</a>
-          <a href={instagram}>instagram</a>
-        </nav>
+      <header class="mast">
+        <div class="rule thick"></div>
+        <div class="mast-row">
+          <span class="mast-meta">est. 2021</span>
+          <span class="wordmark">moneymolz</span>
+          <nav>
+            <a href="#about">about</a>
+            <a href={instagram}>instagram</a>
+          </nav>
+        </div>
+        <div class="rule"></div>
       </header>
 
       <section class="hero">
-        <img class="hero-photo" src="/anmol.jpg" alt="Anmol on a balcony in Dubrovnik at sunset" width="1200" height="1600" />
         <div class="hero-text">
+          <p class="dateline">{buildDate} · brooklyn, ny</p>
           <h1>the <span class="hl">real numbers</span> behind the money.</h1>
-          <p>net worth updates, budget breakdowns, and the real numbers behind them.</p>
+          {lede && <p class="lede">{lede}</p>}
           <ul class="links">
             {shownLinks.map((l) => (
               <li>
@@ -136,17 +149,22 @@ const aboutPhotos = photos.filter((ph) => ph.src);
             ))}
           </ul>
         </div>
+        <figure class="hero-fig">
+          <img class="hero-photo" src="/anmol.jpg" alt="Anmol on a balcony in Dubrovnik at sunset" width="1200" height="1600" />
+          <figcaption>dubrovnik, july 2026.</figcaption>
+        </figure>
       </section>
 
       <section class="goal reveal" aria-labelledby="goal-title">
         <div class="goal-head">
-          <h2 id="goal-title">{goal.title}</h2>
-          <span class="goal-date">by {goal.date}</span>
+          <h2 id="goal-title">the ledger</h2>
+          <span class="goal-date">{goal.title} · by {goal.date}</span>
         </div>
-        <div class="goal-figures">
-          <span class="goal-now" data-count={goal.current}>${goal.current}k</span>
-          <span class="goal-left">${toGo}k to go</span>
-        </div>
+        <ul class="ledger">
+          <li><span>net worth right now</span><span class="dots" aria-hidden="true"></span><b class="goal-now" data-count={goal.current}>${goal.current}k</b></li>
+          <li><span>distance to 300k</span><span class="dots" aria-hidden="true"></span><b>${toGo}k to go</b></li>
+          <li><span>401k per paycheck</span><span class="dots" aria-hidden="true"></span><b>26%</b></li>
+        </ul>
         <div
           class="ruler"
           role="progressbar"
@@ -184,7 +202,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         <section id="about" class="about reveal">
           <div class="about-text">
             <h2>about me</h2>
-            {aboutText.map((t) => <p>{t}</p>)}
+            {aboutRest.map((t) => <p>{t}</p>)}
           </div>
           <div class="about-photos">
             {aboutPhotos.map((ph) => <img class:list={{ wide: ph.wide }} src={ph.src} alt={ph.alt} loading="lazy" />)}
@@ -194,7 +212,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         <section id="about" class="split reveal">
           <div class="split-head"><h2>about me</h2></div>
           <div class="about-text">
-            {aboutText.map((t) => <p>{t}</p>)}
+            {aboutRest.map((t) => <p>{t}</p>)}
           </div>
         </section>
       )}
@@ -265,7 +283,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
       <section class="topics reveal">
         <h2>what i post about</h2>
         <ul>
-          {topics.map((t) => <li>{t}</li>)}
+          {topics.map((t, i) => <li><span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t}</li>)}
         </ul>
       </section>
 
@@ -273,6 +291,7 @@ const aboutPhotos = photos.filter((ph) => ph.src);
         <span class="seen-label">as seen on</span>
         <span class="seen-name">CNBC</span>
         <span class="seen-name">Acorns</span>
+        <span class="colophon">set in young serif + figtree · brooklyn, ny</span>
       </footer>
     </div>
     <script>
@@ -354,19 +373,30 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
   .page { max-width: 1160px; margin: 0 auto; padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 56px; }
 
-  /* top bar */
-  .top { display: flex; align-items: center; justify-content: space-between; }
-  .kicker { font-size: 15px; font-weight: 400; color: var(--kicker); letter-spacing: 0.22em; }
-  .top nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
-  .top a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
-  .top a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* masthead */
+  .mast { display: flex; flex-direction: column; }
+  .rule { height: 1px; background: var(--ink); }
+  .rule.thick { height: 4px; }
+  .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 2px; }
+  .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
+  .wordmark { font-family: var(--display); font-size: 22px; color: var(--ink); }
+  .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
+  .mast a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
+  .mast a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
-  /* hero */
-  .hero { display: flex; flex-direction: column; gap: 28px; margin-top: -32px; }
-  .hero-photo { width: 100%; height: 360px; object-fit: cover; object-position: 50% 30%; border-radius: 14px; display: block; }
+  /* hero: cover story */
+  .hero { display: flex; flex-direction: column; gap: 28px; }
+  .dateline { margin: 0; font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
   .hero-text { display: flex; flex-direction: column; gap: 16px; }
   .hero h1 { font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; }
-  .hero p { margin: 0; max-width: 34ch; color: var(--muted); }
+  .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
+  .lede::first-letter {
+    font-family: var(--display); font-size: 54px; float: left;
+    line-height: 0.85; padding: 4px 8px 0 0; color: var(--ink);
+  }
+  .hero-fig { margin: 0; background: #fff; border: 1px solid var(--ink); padding: 10px 10px 6px; border-radius: 4px; }
+  .hero-photo { width: 100%; height: 360px; object-fit: cover; object-position: 50% 30%; display: block; }
+  .hero-fig figcaption { font-size: 13px; font-style: italic; color: var(--muted); padding: 8px 2px 2px; }
 
   /* links: a list, not a stack of pills */
   .links { margin-top: 12px; border-top: 1px solid var(--divider); }
@@ -390,9 +420,13 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   .goal-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
   .goal h2 { font-size: 24px; }
   .goal-date { font-size: 15px; color: var(--muted); }
-  .goal-figures { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-  .goal-now { font-family: var(--display); color: var(--ink); font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
-  .goal-left { font-size: 16px; font-weight: 500; color: var(--body); white-space: nowrap; }
+  /* the ledger */
+  .ledger { margin-top: 4px; }
+  .ledger li { display: flex; align-items: baseline; gap: 10px; padding: 10px 2px; font-size: 16px; }
+  .ledger li + li { border-top: 1px dotted var(--divider); }
+  .ledger .dots { flex: 1; border-bottom: 1px dotted var(--muted); transform: translateY(-4px); }
+  .ledger b { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .goal-now { font-family: var(--display); font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
   .ruler {
     position: relative; height: 36px; margin-top: 8px;
     border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;
@@ -468,8 +502,8 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
   /* peach accents */
   .hl { background: linear-gradient(to top, var(--peach) 36%, transparent 36%); }
-  .hero-photo { box-shadow: 12px 12px 0 var(--peach); }
-  .top a:hover { text-decoration-color: var(--peach); text-decoration-thickness: 2px; }
+  .hero-fig { box-shadow: 10px 10px 0 var(--peach); }
+  .mast a:hover { text-decoration-color: var(--peach); text-decoration-thickness: 2px; }
   .link.primary { background: var(--peach); color: var(--ink); }
   .link.primary:hover { background: color-mix(in srgb, var(--peach), #000 8%); }
   .mapwrap .kicker {
@@ -483,30 +517,33 @@ const aboutPhotos = photos.filter((ph) => ph.src);
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
   .topics ul { border-top: 1px solid var(--divider); }
-  .topics li { padding: 14px 4px; border-bottom: 1px solid var(--divider); font-size: 18px; color: var(--ink); }
+  .topics li { display: flex; gap: 16px; align-items: baseline; padding: 14px 4px; border-bottom: 1px solid var(--divider); font-size: 18px; color: var(--ink); }
+  .t-num { font-size: 13px; color: var(--kicker); font-variant-numeric: tabular-nums; }
 
   /* footer */
   .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--divider); }
   .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: var(--kicker); }
   .seen-name { font-family: var(--display); font-size: 24px; color: var(--ink); }
+  .colophon { width: 100%; font-size: 13px; letter-spacing: 0.06em; color: var(--kicker); }
 
   @media (min-width: 900px) {
     .page { padding: 32px 48px 64px; gap: 96px; }
 
     .hero {
-      display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-      column-gap: 72px; align-items: end; margin-top: -24px;
+      display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      column-gap: 72px; align-items: center;
     }
-    .hero-photo { height: 640px; border-radius: 18px; }
+    .hero-photo { height: 640px; border-radius: 2px; }
     .hero-text { gap: 20px; padding-bottom: 8px; }
     .hero h1 { font-size: 80px; line-height: 0.98; }
-    .hero p { font-size: 19px; }
+    .lede { font-size: 19px; }
     .links { margin-top: 20px; }
 
     .goal { gap: 12px; padding-top: 32px; }
     .goal h2 { font-size: 30px; }
-    .goal-date, .goal-left { font-size: 18px; }
+    .goal-date { font-size: 18px; }
     .goal-now { font-size: 56px; line-height: 0.95; }
+    .ledger li { font-size: 18px; }
     .ruler { height: 56px; border-radius: 8px; }
     .ticks { font-size: 14px; }
 
@@ -532,6 +569,9 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 
     .seen { flex-wrap: nowrap; gap: 28px; }
     .seen-label { width: auto; }
+    .colophon { width: auto; margin-left: auto; }
+
+    .wordmark { font-size: 26px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
