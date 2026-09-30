@@ -298,42 +298,49 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
       (function () {
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        // scroll reveals + money map cascade
+        // scroll reveals + cascades + ruler fill on scroll
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              var fill = e.target.querySelector('.ruler-fill');
+              if (fill && fill.dataset.w) {
+                fill.style.setProperty('width', fill.dataset.w + '%', 'important');
+              }
+              io.unobserve(e.target);
+            }
           });
         }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
         document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-        document.querySelectorAll('.map').forEach(function (map) {
-          Array.prototype.forEach.call(map.children, function (child, i) {
-            child.style.transitionDelay = Math.min(i * 55, 800) + 'ms';
+        document.querySelectorAll('.map, .ledger').forEach(function (list) {
+          Array.prototype.forEach.call(list.children, function (child, i) {
+            child.style.transitionDelay = Math.min(i * 70, 800) + 'ms';
           });
-          io.observe(map);
+          io.observe(list);
         });
 
-        // goal ruler fills up
-        var fill = document.querySelector('.ruler-fill');
-        if (fill && fill.dataset.w) {
-          requestAnimationFrame(function () {
-            fill.style.setProperty('width', fill.dataset.w + '%', 'important');
-          });
-        }
-
-        // goal number counts up
+        // goal number counts up when scrolled into view
         var goalNow = document.querySelector('.goal-now');
-        if (goalNow && goalNow.dataset.count && !reduce) {
-          var target = parseInt(goalNow.dataset.count, 10);
-          var dur = 1200, t0 = null;
-          setTimeout(function () {
-            requestAnimationFrame(function tick(t) {
-              if (!t0) t0 = t;
-              var p = Math.min(1, (t - t0) / dur);
-              var eased = 1 - Math.pow(1 - p, 3);
-              goalNow.textContent = '$' + Math.round(target * eased) + 'k';
-              if (p < 1) requestAnimationFrame(tick);
+        if (goalNow && goalNow.dataset.count) {
+          var counted = false;
+          var cio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting || counted) return;
+              counted = true;
+              cio.unobserve(e.target);
+              if (reduce) return;
+              var target = parseInt(goalNow.dataset.count, 10);
+              var dur = 1200, t0 = null;
+              requestAnimationFrame(function tick(t) {
+                if (!t0) t0 = t;
+                var p = Math.min(1, (t - t0) / dur);
+                var eased = 1 - Math.pow(1 - p, 3);
+                goalNow.textContent = '$' + Math.round(target * eased) + 'k';
+                if (p < 1) requestAnimationFrame(tick);
+              });
             });
-          }, 300);
+          }, { threshold: 0.4 });
+          cio.observe(goalNow);
         }
       })();
     </script>
@@ -482,23 +489,38 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
   .map-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
   .map-chips li { border: 1px solid var(--divider); background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 15px; color: var(--body); }
 
-  /* motion: entrance, scroll reveals, map cascade */
+  /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
-  .hero-photo { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes settle { from { opacity: 0; transform: translateY(22px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes inkwash { from { color: var(--peach); } to { color: var(--ink); } }
+  .mast { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-fig { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
+  .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
+  .lede::first-letter { animation: inkwash 1.4s ease 0.6s both; }
 
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .js .reveal.in { opacity: 1; transform: none; }
 
-  .js .map > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
-  .js .map.in > * { opacity: 1; transform: none; }
+  .js .map > *, .js .ledger > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .js .map.in > *, .js .ledger.in > * { opacity: 1; transform: none; }
   .js .map > .map-link { transform: scaleY(0); transform-origin: top center; }
   .js .map.in > .map-link { transform: scaleY(1); }
   .js .map.in > .map-node:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20, 20, 20, 0.08); }
 
   .js .ruler-fill { width: 0 !important; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s; }
+
+  /* hover micro-interactions */
+  .hero-fig { transition: transform 0.35s ease, box-shadow 0.35s ease; }
+  .hero-fig:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0 var(--peach); }
+  a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+  a.link:hover::after { opacity: 1; transform: none; }
+  .topics li { transition: transform 0.25s ease; }
+  .topics li:hover { transform: translateX(6px); }
+  .t-num { transition: color 0.25s ease; }
+  .topics li:hover .t-num { color: var(--ink); }
 
   /* peach accents */
   .hl { background: linear-gradient(to top, var(--peach) 36%, transparent 36%); }
