@@ -1,19 +1,16 @@
 export type Platform = 'instagram' | 'tiktok';
 
 export interface Env {
-  PIPELINE: Workflow<PipelineParams>;
-  // secrets
   SECRET: string;
   APIFY_TOKEN: string;
   GEMINI_API_KEY: string;
   PLACES_API_KEY: string;
   SHEET_URL: string;
-  // vars
   GEMINI_MODEL: string;
   INSTAGRAM_ACTOR: string;
   TIKTOK_ACTOR: string;
-  CONFIDENCE_THRESHOLD: string;
-  SYNC_WAIT_SECONDS: string;
+  CONFIDENCE_THRESHOLD: number;
+  SYNC_WAIT_SECONDS: number;
 }
 
 export interface PipelineParams {

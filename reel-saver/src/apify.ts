@@ -1,5 +1,5 @@
-import { PermanentError } from './errors';
-import type { Env, Platform, Post } from './types';
+import { PermanentError } from './errors.js';
+import type { Env, Platform, Post } from './types.js';
 
 const API = 'https://api.apify.com/v2';
 
