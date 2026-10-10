@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "reel-saver",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "observability": { "enabled": true },
+  "workflows": [
+    {
+      "name": "reel-saver-pipeline",
+      "binding": "PIPELINE",
+      "class_name": "SaveWorkflow"
+    }
+  ],
+  "vars": {
+    // Cheapest current Gemini model that takes video. Swap for "gemini-3.1-flash" if parses are weak.
+    "GEMINI_MODEL": "gemini-3.1-flash-lite",
+    "INSTAGRAM_ACTOR": "apify/instagram-scraper",
+    "TIKTOK_ACTOR": "clockworks/tiktok-scraper",
+    // Below this, the caption-only parse is retried with the video.
+    "CONFIDENCE_THRESHOLD": "0.7",
+    // How long the share request waits for the pipeline before answering "saving...".
+    "SYNC_WAIT_SECONDS": "20"
+  }
+  // Secrets (set with `wrangler secret put NAME`):
+  // SHARE_SECRET, APIFY_TOKEN, GEMINI_API_KEY, PLACES_API_KEY, SHEET_URL, SHEET_SECRET
+}
