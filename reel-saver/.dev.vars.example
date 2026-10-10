@@ -1,6 +1,5 @@
-SHARE_SECRET=pick-a-long-random-string
+SECRET=pick-a-long-random-string
 APIFY_TOKEN=apify_api_xxx
 GEMINI_API_KEY=xxx
 PLACES_API_KEY=xxx
 SHEET_URL=https://script.google.com/macros/s/xxx/exec
-SHEET_SECRET=another-long-random-string
