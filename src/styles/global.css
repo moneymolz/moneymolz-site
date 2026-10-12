@@ -33,6 +33,8 @@
 }
 
 @layer base {
+  /* the one piece of tailwind's preflight we need: border utilities set width only */
+  *, ::before, ::after { border-width: 0; border-style: solid; border-color: rgb(var(--line)); }
   body { @apply bg-paper font-sans text-ink-soft antialiased; }
 }
 

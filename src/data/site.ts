@@ -89,46 +89,97 @@ export const photos = [
 export const startHere: { prompt: string; label: string; href: string }[] = [];
 
 // the money map: where every paycheck goes. names + one-line whys, no balances, no account numbers.
-// slide 2 of the moneymap post, as a living section. update names/whys here; the page redraws.
-export const moneyMap = {
-  updated: 'september 2026',
-  start: { name: 'paycheck', why: 'lands every 15th and end of month' },
-  firstLabel: 'first',
-  first: [
-    { name: '401k (fidelity)', why: 'retirement first. maxing it out' },
-    { name: 'hsa', why: 'maxed' },
-  ],
-  hub: { name: 'robinhood checking', why: 'the hub. bills and rent flow out of here' },
-  hubLabel: 'from the hub',
-  branches: [
-    { name: 'robinhood savings', why: 'travel + gift buckets' },
-    { name: 'fidelity brokerage', why: 'emergency fund + wedding bucket, in SGOV' },
-  ],
-  cardsLabel: 'credit cards',
-  cardsNote: 'all on autopay, paid off manually every payday',
-  cards: [
-    'chase sapphire preferred',
-    'chase freedom unlimited',
-    'united explorer card',
-    'world of hyatt credit card',
-    'bilt blue',
-    'u.s. bank altitude connect',
-    'robinhood credit card',
-  ],
-  investingLabel: 'investing',
-  investing: [
-    { name: 'robinhood traditional ira', why: '' },
-    { name: 'robinhood roth ira', why: '' },
-    { name: 'ny 529', why: '' },
-  ],
-  cashbackLabel: 'cashback apps',
-  cashback: [
-    { name: 'rakuten', why: 'cash back on stuff i\u2019d buy anyway' },
-    { name: 'fetch', why: 'points for snapping receipts' },
-  ],
+// slide 2 of the moneymap post, as a living section. both the node map (desktop) and the
+// list (mobile) read from `stages`, so edit copy here once.
+// `col` places a stop in the node map: 0 paycheck, 1 deductions, 2 the hub, 3 destinations.
+export type MapStage = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  headline: string;
+  note?: string;
+  details: { label: string; value: string }[];
+  col: 0 | 1 | 2 | 3;
 };
+
+export const moneyMapUpdated = 'september 2026';
+
+export const stages: MapStage[] = [
+  {
+    id: 'paycheck', col: 0, eyebrow: 'lands', title: 'paycheck',
+    headline: 'lands every 15th and end of month',
+    note: 'everything starts here. retirement and hsa come out first, then the rest goes to the hub.',
+    details: [{ label: 'lands', value: 'every 15th and end of month' }, { label: 'goes to', value: 'the hub' }],
+  },
+  {
+    id: 'deductions', col: 1, eyebrow: 'first', title: 'deductions',
+    headline: 'retirement and hsa',
+    note: 'retirement first. maxing it out.',
+    details: [{ label: 'retirement', value: 'maxed' }, { label: 'hsa', value: 'maxed' }],
+  },
+  {
+    id: 'hub', col: 2, eyebrow: 'the hub', title: 'robinhood checking',
+    headline: 'the hub. bills and rent flow out of here',
+    note: 'everything else is funded from this one account.',
+    details: [
+      { label: 'bills and rent', value: 'flow out of here' },
+      { label: 'transfers', value: 'savings, brokerage, investing' },
+      { label: 'credit cards', value: 'paid off every payday' },
+    ],
+  },
+  {
+    id: 'savings', col: 3, eyebrow: 'set aside', title: 'robinhood savings',
+    headline: 'travel + gift buckets',
+    details: [{ label: 'travel', value: 'bucket' }, { label: 'gifts', value: 'bucket' }],
+  },
+  {
+    id: 'brokerage', col: 3, eyebrow: 'held', title: 'fidelity brokerage',
+    headline: 'emergency fund + wedding bucket, in SGOV',
+    note: 'held in SGOV so the cash keeps working while it waits.',
+    details: [{ label: 'emergency fund', value: 'SGOV' }, { label: 'wedding bucket', value: 'SGOV' }],
+  },
+  {
+    id: 'investing', col: 3, eyebrow: 'growing', title: 'investing',
+    headline: 'retirement and education savings',
+    note: 'long-term accounts.',
+    details: [{ label: 'retirement', value: 'traditional + roth' }, { label: 'education savings', value: 'long-term' }],
+  },
+  {
+    id: 'cards', col: 3, eyebrow: 'spending', title: 'credit cards',
+    headline: 'all on autopay, paid off manually every payday',
+    details: [
+      { label: 'chase sapphire preferred', value: 'on autopay' },
+      { label: 'chase freedom unlimited', value: 'on autopay' },
+      { label: 'united explorer card', value: 'on autopay' },
+      { label: 'world of hyatt credit card', value: 'on autopay' },
+      { label: 'bilt blue', value: 'on autopay' },
+      { label: 'u.s. bank altitude connect', value: 'on autopay' },
+      { label: 'robinhood credit card', value: 'on autopay' },
+    ],
+  },
+  {
+    id: 'cashback', col: 3, eyebrow: 'bonus', title: 'cashback apps',
+    headline: 'rakuten + fetch',
+    note: 'rewards loop back into the hub.',
+    details: [
+      { label: 'rakuten', value: 'cash back on stuff i\u2019d buy anyway' },
+      { label: 'fetch', value: 'points for snapping receipts' },
+    ],
+  },
+];
+
+// lines on the node map. `loop` draws dashed: money coming back into the hub.
+export const mapEdges: { from: string; to: string; loop?: boolean }[] = [
+  { from: 'paycheck', to: 'deductions' },
+  { from: 'paycheck', to: 'hub' },
+  { from: 'hub', to: 'savings' },
+  { from: 'hub', to: 'brokerage' },
+  { from: 'hub', to: 'investing' },
+  { from: 'hub', to: 'cards' },
+  { from: 'cashback', to: 'hub', loop: true },
+];
+
 // ======================
 
 // stops after the paycheck, for the bento tile ("paycheck in, 7 destinations")
-export const mapDestinations =
-  1 + 1 + moneyMap.branches.length + 1 + 1 + 1; // first, hub, branches, cards, investing, cashback
+export const mapDestinations = stages.length - 1;

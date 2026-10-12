@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 
-import { netWorth, ledgerRows, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMap } from '../data/site';
+import { netWorth, ledgerRows, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
 import { hasUrl, isPlaceholder, stripPlaceholders, short } from '../lib/format';
 import { NetWorthCard } from '../components/NetWorthCard';
 import Bento from '../components/Bento.astro';
+import { MoneyMap } from '../components/MoneyMap';
 
 const goal = { current: Math.round(netWorth.current / 1000), target: Math.round(netWorth.goal / 1000) };
 
@@ -143,64 +144,8 @@ const aboutRest = aboutText.slice(1);
       <section id="money-map" class="mapwrap">
         <div class="kicker reveal">the money map</div>
         <h2 class="reveal">where every paycheck goes</h2>
-        <p class="map-updated reveal">updated {moneyMap.updated}</p>
-        <div class="map">
-          <div class="map-node map-start">
-            <span class="map-name">{moneyMap.start.name}</span>
-            <span class="map-why">{moneyMap.start.why}</span>
-          </div>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-tag">{moneyMap.firstLabel}</div>
-          <div class="map-row">
-            {moneyMap.first.map((n) => (
-              <div class="map-node">
-                <span class="map-name">{n.name}</span>
-                <span class="map-why">{n.why}</span>
-              </div>
-            ))}
-          </div>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-node map-hub">
-            <span class="map-name">{moneyMap.hub.name}</span>
-            <span class="map-why">{moneyMap.hub.why}</span>
-          </div>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-tag">{moneyMap.hubLabel}</div>
-          <div class="map-row">
-            {moneyMap.branches.map((n) => (
-              <div class="map-node">
-                <span class="map-name">{n.name}</span>
-                <span class="map-why">{n.why}</span>
-              </div>
-            ))}
-          </div>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-tag">{moneyMap.cardsLabel}</div>
-          <p class="map-note">{moneyMap.cardsNote}</p>
-          <ul class="map-chips">
-            {moneyMap.cards.map((c) => <li>{c}</li>)}
-          </ul>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-tag">{moneyMap.investingLabel}</div>
-          <div class="map-row">
-            {moneyMap.investing.map((n) => (
-              <div class="map-node">
-                <span class="map-name">{n.name}</span>
-                {n.why && <span class="map-why">{n.why}</span>}
-              </div>
-            ))}
-          </div>
-          <div class="map-link" aria-hidden="true"></div>
-          <div class="map-tag">{moneyMap.cashbackLabel}</div>
-          <div class="map-row">
-            {moneyMap.cashback.map((n) => (
-              <div class="map-node">
-                <span class="map-name">{n.name}</span>
-                <span class="map-why">{n.why}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <p class="map-updated reveal">updated {moneyMapUpdated}</p>
+        <MoneyMap client:load stages={stages} edges={mapEdges} />
       </section>
 
       <section class="topics reveal">
@@ -227,7 +172,7 @@ const aboutRest = aboutText.slice(1);
         const fill = el.querySelector<HTMLElement>('.ruler-fill');
         if (fill?.dataset.w) fill.style.setProperty('width', fill.dataset.w + '%', 'important');
       });
-      document.querySelectorAll('.map, .ledger').forEach((list) => {
+      document.querySelectorAll('.ledger').forEach((list) => {
         Array.from(list.children).forEach((child, i) => {
           (child as HTMLElement).style.transitionDelay = Math.min(i * 70, 800) + 'ms';
         });
@@ -378,18 +323,6 @@ const aboutRest = aboutText.slice(1);
   .mapwrap { display: flex; flex-direction: column; gap: 12px; }
   .mapwrap h2 { margin: 0; font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
   .map-updated { margin: 0; font-size: 14px; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
-  .map { display: flex; flex-direction: column; align-items: stretch; margin-top: 12px; }
-  .map-node { background: rgb(var(--card)); border: 1px solid rgb(var(--line)); border-radius: 14px; padding: 14px 16px; }
-  .map-start { background: linear-gradient(135deg, rgb(var(--molz-tint)), rgb(var(--sand))); border: none; text-align: center; }
-  .map-hub { border: 1.5px solid rgb(var(--ink)); }
-  .map-name { display: block; font-family: var(--display); font-size: 20px; color: rgb(var(--ink)); }
-  .map-why { display: block; margin-top: 4px; font-size: 14px; color: rgb(var(--ink-soft)); }
-  .map-link { width: 2px; height: 20px; margin: 0 auto; background: linear-gradient(to bottom, rgb(var(--molz-tint)), rgb(var(--sand))); flex: none; }
-  .map-tag { align-self: center; padding: 8px 0 10px; font-size: 14px; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
-  .map-row { display: grid; gap: 10px; }
-  .map-note { margin: 0 0 10px; text-align: center; font-size: 15px; color: rgb(var(--ink-soft)); }
-  .map-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
-  .map-chips li { border: 1px solid rgb(var(--line)); background: rgb(var(--card)); border-radius: 999px; padding: 8px 14px; font-size: 15px; color: rgb(var(--ink-soft)); }
 
   /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
@@ -406,11 +339,9 @@ const aboutRest = aboutText.slice(1);
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .js .reveal.in { opacity: 1; transform: none; }
 
-  .js .map > *, .js .ledger > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
-  .js .map.in > *, .js .ledger.in > * { opacity: 1; transform: none; }
-  .js .map > .map-link { transform: scaleY(0); transform-origin: top center; }
-  .js .map.in > .map-link { transform: scaleY(1); }
-  .js .map.in > .map-node:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20, 20, 20, 0.08); }
+  .js .ledger > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .js .ledger.in > * { opacity: 1; transform: none; }
+
 
   .js .ruler-fill { width: 0 !important; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s; }
 
@@ -431,9 +362,6 @@ const aboutRest = aboutText.slice(1);
     align-self: flex-start; background: rgb(var(--molz-tint)); color: rgb(var(--ink));
     border-radius: 999px; padding: 6px 16px; letter-spacing: 0.18em;
   }
-  .map-row .map-node { border-left: 3px solid rgb(var(--molz-tint)); }
-  .map-chips li { transition: background 0.25s ease; }
-  .map-chips li:hover { background: rgb(var(--molz-tint)); }
 
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
@@ -480,8 +408,6 @@ const aboutRest = aboutText.slice(1);
     .split-head p { font-size: 18px; }
 
     .mapwrap h2 { font-size: 56px; }
-    .map { max-width: 720px; width: 100%; margin-left: auto; margin-right: auto; }
-    .map-row { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 
     .topics { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .topics h2 { font-size: 40px; }
@@ -495,6 +421,6 @@ const aboutRest = aboutText.slice(1);
 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
-    .js .reveal, .js .map > * { opacity: 1 !important; transform: none !important; }
+    .js .reveal { opacity: 1 !important; transform: none !important; }
   }
 </style>
