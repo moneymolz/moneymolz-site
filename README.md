@@ -1,6 +1,10 @@
 # moneymolz site
 
-astro links page. all the editable stuff (links, goal tracker, topics, instagram url) lives at the top of `src/pages/index.astro`. your photo is `public/anmol.jpg`.
+astro site. all the editable homepage stuff (net worth + goal, links, bento tiles, the money map, topics, instagram url) lives in `src/data/site.ts`. anything set to `null` there shows "not synced yet" instead of a made-up number. your photo is `public/anmol.jpg`.
+
+the work-with-me page keeps its price, booking link and copy at the top of `src/pages/work-with-me.astro`. the sample dashboard on that page reads from `src/data/demo.ts`, which is clearly marked sample data.
+
+checks: `npm run typecheck`, `npm run lint`, `npm run build`.
 
 ## run it locally
 
@@ -11,7 +15,7 @@ open the url it prints (usually http://localhost:4321).
 
 ## swap in photos
 
-drop files into `public/` and set `src` in the `photos` list at the top of `src/pages/index.astro` (e.g. `'/trip.jpg'`). photos with an empty `src` stay hidden.
+drop files into `public/` and set `src` in the `photos` list in `src/data/site.ts` (e.g. `'/trip.jpg'`). photos with an empty `src` stay hidden.
 
 ## placeholders and "coming soon"
 

@@ -1,5 +1,12 @@
 ---
-import Analytics from '@vercel/analytics/astro';
+import Base from '../layouts/Base.astro';
+import {
+  ArrowRight, CalendarCheck, ClipboardList, Clock, LayoutDashboard, PenLine, Repeat, ShieldCheck, Target, Video,
+} from 'lucide-react';
+import { MolzLifeWidget } from '../components/MolzLifeWidget';
+import { demoData } from '../data/demo';
+import { molzLifeHref } from '../data/site';
+import { hasUrl } from '../lib/format';
 
 // ===== EDIT THESE =====
 const cal = 'https://cal.com/moneymolz/personal-finance-dashboard';
@@ -8,40 +15,27 @@ const minutes = 60;
 const instagram = 'https://instagram.com/moneymolz';
 
 const agenda = [
-  { title: 'your money picture', note: 'where you are now, and the one goal that matters most.' },
-  { title: 'the system', note: 'how i automate everything: 401k before the paycheck, SGOV buckets, net spend tracking.' },
-  { title: 'dashboard walkthrough', note: 'a live tour of my setup: net worth, spend, and the math behind financial independence.' },
-  { title: 'your version', note: 'we map your dashboard to your accounts and goals, with your real numbers.' },
+  { icon: Target, title: 'your money picture', note: 'where you are now, and the one goal that matters most.' },
+  { icon: Repeat, title: 'the system', note: 'how i automate everything: 401k before the paycheck, SGOV buckets, net spend tracking.' },
+  { icon: LayoutDashboard, title: 'dashboard walkthrough', note: 'a live tour of my setup: net worth, spend, and the math behind financial independence.' },
+  { icon: PenLine, title: 'your version', note: 'we map your dashboard to your accounts and goals, with your real numbers.' },
 ];
 
 const steps = [
-  { title: '1. book and pay', note: `$${price} through the booking link. prefer paypal? just ask.` },
-  { title: '2. fill the prep form', note: 'ranges are fine. never share logins or account numbers.' },
-  { title: '3. meet for 60 minutes', note: 'we build your version live. you leave with a blueprint.' },
+  { icon: CalendarCheck, title: '1. book and pay', note: `$${price} through the booking link. prefer paypal? just ask.` },
+  // callout: shown in the shield box
+  { icon: ClipboardList, title: '2. fill the prep form', note: 'ranges are fine. never share logins or account numbers.', callout: true },
+  { icon: Video, title: '3. meet for 60 minutes', note: 'we build your version live. you leave with a blueprint.' },
 ];
 // ======================
+
+// until molz life ships, the sample below is the only live preview
+const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>work with me · moneymolz</title>
-    <meta name="description" content="a 60-minute 1:1 session to build your personal finance dashboard with anmol." />
-    <meta property="og:title" content="work with me · moneymolz" />
-    <meta property="og:description" content="a 60-minute 1:1 session to build your personal finance dashboard with anmol." />
-    <script>document.documentElement.classList.add('js');</script>
-    <meta name="theme-color" content="#F6F1EE" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <Analytics />
-  </head>
-  <body>
+<Base
+  title="work with me · moneymolz"
+  description="a 60-minute 1:1 session to build your personal finance dashboard with anmol."
+>
     <div class="page">
       <header class="mast">
         <div class="rule thick"></div>
@@ -56,13 +50,21 @@ const steps = [
         <div class="rule"></div>
       </header>
 
-      <section class="hero">
+      <section class="hero" id="hero">
         <div class="hero-text">
           <p class="dateline">1:1 sessions</p>
-          <h1>build your <span class="hl">dashboard</span> with me.</h1>
+          <h1>build your <em class="accent">dashboard</em> with me.</h1>
           <p class="lede">a {minutes}-minute working session where we build your personal finance dashboard together, using your real numbers.</p>
-          <p class="price"><b>${price}</b> · {minutes} minutes</p>
-          <a class="link primary book" href={cal}>book your session</a>
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <a class="btn-solid group" href={cal}>
+              book your session
+              <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden="true" />
+            </a>
+            <span class="inline-flex items-center gap-1.5 text-sm tabular-nums text-ink-soft">
+              <Clock className="h-4 w-4" aria-hidden="true" /> {minutes} minutes · ${price}
+            </span>
+            <a href={dashboardHref} class="text-sm font-semibold text-molz no-underline underline-offset-4 hover:underline">peek at my dashboard</a>
+          </div>
         </div>
       </section>
 
@@ -71,191 +73,109 @@ const steps = [
           <h2>what you get</h2>
           <p>one hour, your numbers, no generic advice.</p>
         </div>
-        <ul class="rows">
+        <ul class="m-0 grid list-none gap-4 p-0 sm:grid-cols-2">
           {agenda.map((a) => (
-            <li>
-              <div class="row">
-                <span class="row-title">{a.title}</span>
-                <span class="row-note">{a.note}</span>
-              </div>
+            <li class="rounded-2xl border border-line bg-card p-6 shadow-[0_1px_2px_rgba(28,25,23,.04)]">
+              <span class="grid h-10 w-10 place-items-center rounded-full bg-molz-tint text-molz">
+                <a.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <h3 class="m-0 mt-4 text-lg font-semibold text-ink">{a.title}</h3>
+              <p class="m-0 mt-1 text-base text-ink-soft">{a.note}</p>
             </li>
           ))}
         </ul>
       </section>
 
-      <section class="split split-wide reveal">
+      <section id="sample" class="sample reveal" aria-labelledby="sample-title">
         <div class="split-head">
-          <h2>what you'll walk away with</h2>
+          <h2 id="sample-title">what you'll walk away with</h2>
           <p>a dashboard like this, built around your numbers.</p>
         </div>
-        <div class="molz-mock">
-          <div class="mock-card g1">
-            <div><div class="mock-label">net worth</div><div class="mock-num">$148,200</div></div>
-            <div class="mock-sub">82.3% of the $180k goal</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card g2">
-            <div><div class="mock-label">this year</div><div class="mock-num">$9,840</div></div>
-            <div class="mock-sub">ytd spend</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card g3">
-            <div><div class="mock-label">cash flow</div><div class="mock-num">$5,850</div></div>
-            <div class="mock-sub">monthly take-home</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card g4">
-            <div><div class="mock-label">recurring bills</div><div class="mock-num">$2,140/mo</div></div>
-            <div class="mock-sub">5 of 6 paid</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card g5">
-            <div><div class="mock-label">holdings</div><div class="mock-num">$139,500</div></div>
-            <div class="mock-sub">9 positions</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card g6">
-            <div><div class="mock-label">emergency + travel</div><div class="mock-num">$22,400</div></div>
-            <div class="mock-sub">high-yield savings</div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card mock-wide mock-chart-card">
-            <div class="mock-label">actual vs pace · last 3 months</div>
-            <svg viewBox="0 0 600 140" class="mock-chart" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="0" y1="35" x2="600" y2="35" class="chart-grid"/>
-              <line x1="0" y1="80" x2="600" y2="80" class="chart-grid"/>
-              <line x1="0" y1="125" x2="600" y2="125" class="chart-grid"/>
-              <path d="M0,120 C150,110 300,95 600,60" class="chart-pace"/>
-              <path d="M0,124 C70,118 120,104 180,108 C240,112 280,78 340,84 C400,90 440,66 500,62 C540,59 570,54 600,50" class="chart-actual"/>
-              <circle cx="600" cy="50" r="5" class="chart-dot"/>
-            </svg>
-            <div class="mock-legend"><span><i class="dot dot-actual"></i>actual</span><span><i class="dot dot-pace"></i>pace</span></div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card mock-wide">
-            <div class="mock-label">holdings · by value</div>
-            <div class="treemap">
-              <div class="tm tm-big g5"><b>vti</b><span>$68.4k</span></div>
-              <div class="tm g4"><b>sgov</b><span>$25.2k</span></div>
-              <div class="tm g5"><b>vxus</b><span>$19.8k</span></div>
-              <div class="tm g3"><b>fskax</b><span>$13.5k</span></div>
-              <div class="tm-nest">
-                <div class="tm g4"><b>spaxx</b><span>$7.2k</span></div>
-                <div class="tm g2"><b>fxnax</b><span>$5.4k</span></div>
-              </div>
-            </div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <div class="mock-card mock-wide mock-sankey-card">
-            <div class="mock-label">cash flow · sample month</div>
-            <div class="sankey-num">$5,850 in</div>
-            <div class="mock-sub">take-home split between net spending and savings.</div>
-            <svg viewBox="0 0 600 260" class="sankey-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <path d="M32,10 C200,10 400,10 568,10 L568,190 C400,190 200,190 32,190 Z" fill="#a5a0e8"/>
-              <path d="M32,190 C200,190 400,190 568,190 L568,206 C400,206 200,206 32,206 Z" fill="#b8a9d9"/>
-              <path d="M32,206 C200,206 400,206 568,206 L568,220 C400,220 200,220 32,220 Z" fill="#d9a06c"/>
-              <path d="M32,220 C200,220 400,220 568,220 L568,232 C400,232 200,232 32,232 Z" fill="#7ba889"/>
-              <path d="M32,232 C200,232 400,232 568,232 L568,242 C400,242 200,242 32,242 Z" fill="#c98aa5"/>
-              <path d="M32,242 C200,242 400,242 568,242 L568,246 C400,246 200,246 32,246 Z" fill="#c9a84c"/>
-              <path d="M32,246 C200,246 400,246 568,246 L568,250 C400,250 200,250 32,250 Z" fill="#9aa0b0"/>
-              <rect x="18" y="10" width="14" height="240" rx="7" fill="#6c63ff"/>
-              <rect x="568" y="10" width="14" height="240" rx="7" fill="#6c63ff"/>
-              <circle cx="591" cy="100" r="6" fill="#a5a0e8"/>
-              <circle cx="591" cy="198" r="6" fill="#b8a9d9"/>
-              <circle cx="591" cy="213" r="6" fill="#d9a06c"/>
-              <circle cx="591" cy="226" r="6" fill="#7ba889"/>
-              <circle cx="591" cy="237" r="6" fill="#c98aa5"/>
-            </svg>
-            <div class="chip-row">
-              <div class="chip"><span>take-home</span><b>$5,850</b></div>
-              <div class="chip"><span>net spend</span><b>$1,470</b></div>
-              <div class="chip"><span>savings</span><b>$4,380</b></div>
-              <div class="chip"><span>savings rate</span><b class="green">74.9%</b></div>
-            </div>
-            <div class="cat-rows">
-              <div class="cat-row"><span><i class="cdot" style="background:#b8a9d9"></i>nomz</span><b>$385.20</b></div>
-              <div class="cat-row"><span><i class="cdot" style="background:#d9a06c"></i>living</span><b>$342.10</b></div>
-              <div class="cat-row"><span><i class="cdot" style="background:#7ba889"></i>hobbies</span><b>$298.45</b></div>
-              <div class="cat-row"><span><i class="cdot" style="background:#c98aa5"></i>house</span><b>$244.80</b></div>
-              <div class="cat-row"><span><i class="cdot" style="background:#c9a84c"></i>transportation</span><b>$96.30</b></div>
-              <div class="cat-row"><span><i class="cdot" style="background:#9aa0b0"></i>other</span><b>$103.15</b></div>
-            </div>
-            <span class="mock-arrow">↗</span>
-          </div>
-          <p class="mock-cap">sample data from a demo dashboard.</p>
-        </div>
+        <MolzLifeWidget client:visible data={demoData} />
+        <p class="m-0 text-sm italic text-ink-soft">sample data from a demo dashboard.</p>
       </section>
 
-      <section class="split reveal">
-        <div class="split-head">
-          <h2>how it works</h2>
-        </div>
-        <ul class="rows">
+      <section class="reveal flex flex-col gap-6" aria-labelledby="how-title">
+        <h2 id="how-title" class="section-h2">how it works</h2>
+        <ol class="relative m-0 grid list-none gap-8 p-0 md:grid-cols-3 md:gap-6">
+          <span aria-hidden="true" class="absolute bottom-4 left-5 top-4 w-px bg-line md:bottom-auto md:left-[calc(100%/6)] md:right-[calc(100%/6)] md:top-5 md:h-px md:w-auto"></span>
           {steps.map((s) => (
-            <li>
-              <div class="row">
-                <span class="row-title">{s.title}</span>
-                <span class="row-note">{s.note}</span>
+            <li class="relative flex gap-4 md:flex-col md:items-center md:text-center">
+              <span class="relative grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line bg-card text-molz">
+                <s.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div class="md:max-w-[30ch]">
+                <h3 class="m-0 text-lg font-semibold text-ink">{s.title}</h3>
+                {s.callout
+                  ? (
+                    <p class="m-0 mt-2 flex items-start gap-2 rounded-xl bg-sand px-4 py-3 text-left text-sm text-ink">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gain" aria-hidden="true" />
+                      <span>{s.note}</span>
+                    </p>
+                  )
+                  : <p class="m-0 mt-1 text-base text-ink-soft">{s.note}</p>}
               </div>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
 
-      <section class="split reveal">
-        <div class="split-head">
-          <h2>the honest bit</h2>
-        </div>
-        <div class="about-text">
-          <p>this isn't licensed financial advice. it's me showing you the exact system i use, rebuilt around your numbers. everything you share stays between us.</p>
-        </div>
+      <section class="reveal rounded-2xl border border-molz/30 bg-molz-tint p-6 sm:p-8" aria-labelledby="honest-title">
+        <h2 id="honest-title" class="section-h2">the honest bit</h2>
+        <p class="m-0 mt-3 max-w-[60ch] text-base leading-7 text-ink">this isn't licensed financial advice. it's me showing you the exact system i use, rebuilt around your numbers. everything you share stays between us.</p>
       </section>
 
-      <section class="reveal cta">
-        <a class="link primary" href={cal}>book your session · ${price}</a>
+      <section class="reveal cta" id="final-cta">
+        <a class="btn-solid group w-full justify-center py-4 text-lg" href={cal}>
+          book your session · ${price}
+          <ArrowRight className="h-5 w-5 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden="true" />
+        </a>
       </section>
 
       <footer class="seen reveal">
         <span class="seen-label">as seen on</span>
         <span class="seen-name">CNBC</span>
         <span class="seen-name">Acorns</span>
-        <span class="colophon">set in young serif + figtree · brooklyn, ny</span>
+        <span class="colophon">set in instrument serif, young serif + figtree · brooklyn, ny</span>
       </footer>
     </div>
+
+    <!-- mobile: booking bar once the hero is off screen, hidden again at the final button -->
+    <div class="book-bar" data-show="false">
+      <span class="inline-flex items-center gap-1.5 text-sm tabular-nums text-ink-soft">
+        <Clock className="h-4 w-4" aria-hidden="true" /> {minutes} min · ${price}
+      </span>
+      <a class="btn-solid px-5 py-2.5 text-sm" href={cal}>book your session</a>
+    </div>
+
     <script>
-      (function () {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              e.target.classList.add('in');
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-        document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-      })();
+      import { observeReveals } from '../scripts/reveal';
+      observeReveals();
+
+      const bar = document.querySelector<HTMLElement>('.book-bar');
+      const hero = document.getElementById('hero');
+      const cta = document.getElementById('final-cta');
+      if (bar && hero && cta) {
+        const seen = { hero: true, cta: false };
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => { seen[e.target === hero ? 'hero' : 'cta'] = e.isIntersecting; });
+          const show = !seen.hero && !seen.cta;
+          bar.dataset.show = String(show);
+          bar.inert = !show;
+        });
+        io.observe(hero);
+        io.observe(cta);
+        bar.inert = true;
+      }
     </script>
-  </body>
-</html>
+</Base>
 
 <style is:global>
-  :root {
-    --cream: #F6F1EE;
-    --ink: #141414;
-    --body: #3A372F;
-    --muted: #6B6455;
-    --divider: #E3DCCD;
-    --kicker: #8A8172;
-    --peach: #F2DBBC;
-    --mint: #CFE3E1;
-    --display: 'Young Serif', Georgia, serif;
-    --sans: 'Figtree', system-ui, sans-serif;
-  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--cream);
-    color: var(--body);
+    background: rgb(var(--paper));
+    color: rgb(var(--ink-soft));
     font-family: var(--sans);
     font-size: 17px;
     font-weight: 300;
@@ -263,147 +183,74 @@ const steps = [
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--ink); }
-  a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
-  h1, h2 { font-family: var(--display); font-weight: 400; color: var(--ink); margin: 0; }
+  a { color: rgb(var(--ink)); }
+  a:focus-visible { outline: 2px solid rgb(var(--molz)); outline-offset: 3px; border-radius: 4px; }
+  h1, h2 { font-family: var(--display); font-weight: 400; color: rgb(var(--ink)); margin: 0; }
   ul { list-style: none; margin: 0; padding: 0; }
 
-  .page { max-width: 1160px; margin: 0 auto; padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 56px; }
+  .page { max-width: 1160px; margin: 0 auto; padding: 20px 16px 96px; display: flex; flex-direction: column; gap: 56px; }
 
   .mast { display: flex; flex-direction: column; animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .rule { height: 1px; background: var(--ink); }
+  .rule { height: 1px; background: rgb(var(--ink)); }
   .rule.thick { height: 4px; }
   .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 2px; }
-  .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
-  .wordmark { font-family: var(--display); font-size: 22px; color: var(--ink); text-decoration: none; }
+  .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: rgb(var(--ink-soft)); }
+  .wordmark { font-family: var(--display); font-size: 22px; color: rgb(var(--ink)); text-decoration: none; }
   .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
   .mast nav a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
-  .mast nav a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--peach); text-decoration-thickness: 2px; }
+  .mast nav a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgb(var(--molz)); text-decoration-thickness: 2px; }
 
   .hero { display: flex; flex-direction: column; gap: 28px; }
-  .dateline { margin: 0; font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
+  .dateline { margin: 0; font-size: 12px; letter-spacing: 0.22em; color: rgb(var(--ink-soft)); }
   .hero-text { display: flex; flex-direction: column; gap: 16px; }
   .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
   .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
-  .hero-text > *:nth-child(5) { animation-delay: 0.4s; }
-  .hero h1 { font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; }
-  .hl { background: linear-gradient(to top, var(--peach) 36%, transparent 36%); }
+  .hero h1 { font-family: var(--font-instrument); font-size: 48px; line-height: 52px; letter-spacing: -0.02em; }
+  .hero h1 .accent { font-style: italic; color: rgb(var(--molz)); }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
-  .price { margin: 4px 0 0; font-size: 18px; color: var(--muted); }
-  .price b { font-family: var(--display); font-size: 34px; font-weight: 400; color: var(--ink); margin-right: 6px; }
-
-  .link {
-    display: flex; align-items: center; min-height: 60px; padding: 0 4px;
-    text-decoration: none; font-size: 18px; font-weight: 500;
-  }
-  .link.primary {
-    background: var(--peach); color: var(--ink); border-radius: 10px;
-    padding: 0 20px; margin: 10px 0;
-  }
-  .link.primary:hover { background: color-mix(in srgb, var(--peach), #000 8%); }
-  a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
-  a.link:hover::after { opacity: 1; transform: none; }
-  .hero .link.primary { align-self: flex-start; }
 
   .split { display: flex; flex-direction: column; gap: 20px; }
-  .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .split h2, .sample h2, .section-h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
   .split-head { display: flex; flex-direction: column; gap: 12px; }
-  .split-head p { margin: 0; max-width: 36ch; color: var(--muted); }
-  .rows { border-top: 1px solid var(--divider); }
-  .rows li { border-bottom: 1px solid var(--divider); }
-  .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; }
-  .row-title { font-size: 18px; font-weight: 500; color: var(--ink); }
-  .row-note { font-size: 15px; color: var(--muted); }
-  .about-text { display: flex; flex-direction: column; gap: 16px; }
-  .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
-
-  /* sample dashboard mockup, in the molz wealth visual language */
-  .molz-mock { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .mock-card {
-    border-radius: 18px; padding: 18px 16px; min-height: 138px; position: relative;
-    display: flex; flex-direction: column; justify-content: space-between; gap: 6px;
-  }
-  .g1 { background: linear-gradient(135deg, #d9d4f5, #cfe3ef); }
-  .g2 { background: linear-gradient(135deg, #f6d9d9, #e8dcf3); }
-  .g3 { background: linear-gradient(135deg, #fbe3cf, #f6d3d8); }
-  .g4 { background: linear-gradient(135deg, #d8ecdf, #dfe7f2); }
-  .g5 { background: linear-gradient(135deg, #dcd8f7, #d3e6f2); }
-  .g6 { background: linear-gradient(135deg, #f3d9e4, #ddd3f2); }
-  .mock-label { font-size: 12px; letter-spacing: 0.12em; font-weight: 600; color: #5b5b7a; margin-bottom: 6px; }
-  .mock-num { font-family: var(--sans); font-size: 30px; font-weight: 650; line-height: 1.05; color: #23233a; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-  .mock-sub { font-size: 13px; color: #5b5b7a; padding-right: 44px; }
-  .mock-arrow {
-    position: absolute; right: 12px; bottom: 12px; width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(255,255,255,0.75); display: grid; place-items: center; font-size: 14px; color: #6c63ff;
-  }
-  .mock-cap { grid-column: 1 / -1; margin: 0; font-size: 13px; font-style: italic; color: var(--kicker); }
-  .mock-wide { grid-column: 1 / -1; }
-  .mock-chart-card { background: #fff; border: 1px solid var(--divider); }
-  .mock-chart { width: 100%; height: 150px; margin-top: 8px; }
-  .chart-grid { stroke: #ece8f5; stroke-width: 1; }
-  .chart-pace { fill: none; stroke: #c98aa5; stroke-width: 2.5; stroke-dasharray: 7 6; stroke-linecap: round; }
-  .chart-actual { fill: none; stroke: #6c63ff; stroke-width: 3; stroke-linecap: round; }
-  .chart-dot { fill: #6c63ff; stroke: #fff; stroke-width: 2; }
-  .mock-legend { display: flex; gap: 16px; font-size: 13px; color: #5b5b7a; margin-top: 4px; }
-  .dot { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
-  .dot-actual { background: #6c63ff; }
-  .dot-pace { background: repeating-linear-gradient(90deg, #c98aa5 0 4px, transparent 4px 7px); }
-  .treemap { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; min-height: 190px; margin-top: 8px; }
-  .tm { border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
-  .tm b { font-size: 15px; color: #23233a; font-weight: 600; }
-  .tm span { font-size: 12px; color: #5b5b7a; }
-  .tm-big { grid-row: span 2; }
-  .tm-big b { font-size: 20px; }
-  .tm-nest { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
-  /* sankey mockup */
-  .mock-sankey-card { background: #fff; border: 1px solid var(--divider); }
-  .sankey-num { font-family: var(--sans); font-size: 38px; font-weight: 650; color: #23233a; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; margin-top: 6px; }
-  .sankey-svg { width: 100%; height: auto; margin: 12px 0 4px; }
-  .chip-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-  .chip { background: #f4f2fa; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .chip span { font-size: 11px; letter-spacing: 0.08em; color: #5b5b7a; }
-  .chip b { font-size: 16px; color: #23233a; font-weight: 600; }
-  .chip b.green { color: #2e7d5b; }
-  .cat-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin-top: 10px; }
-  .cat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 14px; border-bottom: 1px solid #f0edf7; color: #23233a; }
-  .cat-row b { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .cdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
-  @media (max-width: 560px) { .chip-row { grid-template-columns: 1fr 1fr; } .cat-rows { grid-template-columns: 1fr; } }
-  @media (max-width: 560px) { .molz-mock { grid-template-columns: 1fr 1fr; } }
+  .split-head p { margin: 0; max-width: 36ch; color: rgb(var(--ink-soft)); }
+  .sample { display: flex; flex-direction: column; gap: 20px; }
 
   .cta { display: flex; }
-  .cta .link.primary { flex: 1; justify-content: center; }
-  .cta a.link::after { display: none; }
 
-  .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--divider); }
-  .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: var(--kicker); }
-  .seen-name { font-family: var(--display); font-size: 24px; color: var(--ink); }
-  .colophon { width: 100%; font-size: 13px; letter-spacing: 0.06em; color: var(--kicker); }
+  /* mobile booking bar */
+  .book-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgb(var(--card)); border-top: 1px solid rgb(var(--line));
+    box-shadow: 0 -4px 16px rgba(28, 25, 23, 0.06);
+    transform: translateY(110%); transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .book-bar[data-show="true"] { transform: none; }
+
+  .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid rgb(var(--line)); }
+  .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
+  .seen-name { font-family: var(--display); font-size: 24px; color: rgb(var(--ink)); }
+  .colophon { width: 100%; font-size: 13px; letter-spacing: 0.06em; color: rgb(var(--ink-soft)); }
 
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .js .reveal.in { opacity: 1; transform: none; }
 
+  @media (min-width: 768px) {
+    .page { padding-bottom: 64px; }
+    .book-bar { display: none; }
+  }
   @media (min-width: 900px) {
     .page { padding: 32px 48px 64px; gap: 96px; }
-    .hero h1 { font-size: 80px; line-height: 0.98; }
+    .hero h1 { font-size: 72px; line-height: 76px; }
     .lede { font-size: 19px; }
     .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
-    .split h2 { font-size: 56px; }
+    .split h2, .sample h2, .section-h2 { font-size: 56px; }
     .split-head p { font-size: 18px; }
-    body { overflow-x: clip; }
-    .split-wide {
-      display: flex; flex-direction: column; gap: 28px;
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      padding-left: 48px;
-      padding-right: 48px;
-    }
-    .split-wide .split-head { max-width: 640px; }
-    .split-wide .molz-mock { width: 100%; max-width: 1560px; margin-left: auto; margin-right: auto; }
+    .sample { gap: 28px; }
     .seen { flex-wrap: nowrap; gap: 28px; }
     .seen-label { width: auto; }
     .colophon { width: auto; margin-left: auto; }
