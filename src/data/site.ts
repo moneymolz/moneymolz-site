@@ -12,10 +12,11 @@ export const netWorth = {
   milestones: [100000, 200000, 300000],
   // change since last month, in dollars. null hides the chip and the "months at this pace" line.
   monthDelta: null as number | null,
-  // last 12 month-end net worth values, oldest first. fewer than 2 hides the sparkline.
+  // month-end history for the sparkline. left empty on purpose: anything here ships in the
+  // page source, even though the sparkline doesn't print the numbers.
   series: [] as number[],
   // when these numbers were last updated, e.g. 'oct 11'. null leaves the date off.
-  asOf: null as string | null,
+  asOf: 'oct 12' as string | null,
 };
 
 // extra rows in the ledger section, under net worth and distance to goal
@@ -32,10 +33,7 @@ export const workWithMeHref = '/work-with-me';
 // an href of '#' shows the tile as "coming soon" instead of a dead link.
 export const bento = {
   moneyMap: { href: '#money-map' },
-  molzLife: {
-    href: molzLifeHref,
-    savingsRate: null as number | null, // this month's savings rate, e.g. 34 for 34%
-  },
+  molzLife: { href: molzLifeHref },
   milestones: { href: '#goal-title' },
   investing: {
     href: '#',
@@ -47,7 +45,7 @@ export const bento = {
     photo: '/anmol.jpg',
     alt: 'Anmol on a balcony in Dubrovnik at sunset',
     latest: 'dubrovnik, july 2026',
-    next: null as string | null, // where next, e.g. 'lisbon in march'
+    next: null as string | null, // where next, e.g. 'lisbon in march'. null hides the line
   },
   slowYears: {
     href: '#',

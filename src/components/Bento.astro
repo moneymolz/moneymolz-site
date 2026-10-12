@@ -1,5 +1,5 @@
 ---
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, LayoutDashboard } from 'lucide-react';
 import { bento, netWorth, mapDestinations } from '../data/site';
 import { hasUrl, short } from '../lib/format';
 
@@ -7,8 +7,6 @@ const nextMilestone = netWorth.milestones.find((m) => netWorth.current < m) ?? n
 const prevMilestone = [...netWorth.milestones].reverse().find((m) => netWorth.current >= m) ?? 0;
 const nextPct = nextMilestone ? Math.round((netWorth.current / nextMilestone) * 100) : 100;
 
-const rate = bento.molzLife.savingsRate;
-const ring = { r: 26, c: 2 * Math.PI * 26 };
 
 const alloc = bento.investing.allocation.slice(0, 3);
 const allocColors = ['bg-molz', 'bg-sky', 'bg-hold'];
@@ -60,18 +58,11 @@ const notSynced = 'text-sm text-ink-soft italic';
           <div class="flex items-center justify-between gap-4">
             <div>
               <p class="eyebrow m-0">molz life dashboard</p>
-              <p class="m-0 mt-2 text-sm">this month's savings rate</p>
-              {rate === null
-                ? <p class:list={['m-0 mt-1', notSynced]}>not synced yet</p>
-                : <p class="m-0 mt-1 text-3xl font-semibold tabular-nums text-ink">{rate}%</p>}
+              <p class="m-0 mt-2 font-serif text-2xl leading-tight text-ink">a peek at my dashboard</p>
             </div>
-            <svg width="64" height="64" viewBox="0 0 64 64" class="shrink-0 -rotate-90" aria-hidden="true">
-              <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" class="stroke-sand" />
-              {rate !== null && (
-                <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" stroke-linecap="round" class="stroke-molz"
-                  stroke-dasharray={ring.c} stroke-dashoffset={ring.c * (1 - Math.min(rate, 100) / 100)} />
-              )}
-            </svg>
+            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-molz-tint text-molz" aria-hidden="true">
+              <LayoutDashboard className="h-6 w-6" />
+            </span>
           </div>
         )}
 
