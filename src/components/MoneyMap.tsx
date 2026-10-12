@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import {
-  BadgePercent, ChevronDown, Circle, CreditCard, Landmark, List, Network, PiggyBank, Plane,
+  BadgePercent, ChevronDown, Circle, CreditCard, Landmark, Lightbulb, List, Network, PiggyBank, Plane,
   ShieldCheck, TrendingUp, Wallet, X, type LucideIcon,
 } from 'lucide-react';
 import { useInView } from './hooks';
@@ -187,7 +187,14 @@ export function MoneyMap({ stages, edges }: Props) {
     <div ref={rootRef} onKeyDown={onKeyDown} className="mt-6">
       {/* map / list override, only where the map fits */}
       <div className="mb-4 hidden items-center justify-between gap-4 md:flex">
-        <p className="m-0 text-sm text-ink-soft">{mode !== 'list' ? "pick a stop to see what's inside." : ''}</p>
+        {mode !== 'list'
+          ? (
+            <p className="m-0 inline-flex items-center gap-1.5 rounded-full bg-teal-tint px-3 py-1.5 text-sm font-semibold text-teal">
+              <Lightbulb className="h-4 w-4" aria-hidden="true" />
+              pick a stop to see what's inside.
+            </p>
+          )
+          : <span />}
         <div role="group" aria-label="money map view" className="inline-flex rounded-full bg-sand p-1">
           {([['map', Network], ['list', List]] as const).map(([m, Icon]) => {
             const active = m === 'map' ? showingMap : !showingMap;
