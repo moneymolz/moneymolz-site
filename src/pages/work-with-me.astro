@@ -121,7 +121,7 @@ const steps = [
           </div>
           <div class="mock-card mock-wide mock-chart-card">
             <div class="mock-label">actual vs pace · last 3 months</div>
-            <svg viewBox="0 0 600 170" class="mock-chart" preserveAspectRatio="none" aria-hidden="true">
+            <svg viewBox="0 0 600 140" class="mock-chart" preserveAspectRatio="none" aria-hidden="true">
               <line x1="0" y1="35" x2="600" y2="35" class="chart-grid"/>
               <line x1="0" y1="80" x2="600" y2="80" class="chart-grid"/>
               <line x1="0" y1="125" x2="600" y2="125" class="chart-grid"/>
@@ -332,8 +332,8 @@ const steps = [
   .g5 { background: linear-gradient(135deg, #dcd8f7, #d3e6f2); }
   .g6 { background: linear-gradient(135deg, #f3d9e4, #ddd3f2); }
   .mock-label { font-size: 12px; letter-spacing: 0.12em; font-weight: 600; color: #5b5b7a; margin-bottom: 6px; }
-  .mock-num { font-family: var(--display); font-size: 29px; line-height: 1.05; color: #23233a; letter-spacing: -0.01em; }
-  .mock-sub { font-size: 13px; color: #5b5b7a; }
+  .mock-num { font-family: var(--sans); font-size: 30px; font-weight: 650; line-height: 1.05; color: #23233a; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .mock-sub { font-size: 13px; color: #5b5b7a; padding-right: 44px; }
   .mock-arrow {
     position: absolute; right: 12px; bottom: 12px; width: 28px; height: 28px; border-radius: 50%;
     background: rgba(255,255,255,0.75); display: grid; place-items: center; font-size: 14px; color: #6c63ff;
@@ -359,7 +359,7 @@ const steps = [
   .tm-nest { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
   /* sankey mockup */
   .mock-sankey-card { background: #fff; border: 1px solid var(--divider); }
-  .sankey-num { font-family: var(--display); font-size: 38px; color: #23233a; letter-spacing: -0.01em; margin-top: 6px; }
+  .sankey-num { font-family: var(--sans); font-size: 38px; font-weight: 650; color: #23233a; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; margin-top: 6px; }
   .sankey-svg { width: 100%; height: auto; margin: 12px 0 4px; }
   .chip-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
   .chip { background: #f4f2fa; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
