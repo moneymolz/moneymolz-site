@@ -18,6 +18,17 @@ export const netWorth = {
   // month-end history for the sparkline. left empty on purpose: anything here ships in the
   // page source, even though the sparkline doesn't print the numbers.
   series: [] as number[],
+  // the climb: milestones crossed, month + year only (no balances). newest shows at the top.
+  startedOn: '2019-06', // where the story starts, for "−25k to 274k in ~7 years"
+  climb: [
+    { amount: -25000, date: 'jun 2019' },
+    { amount: 25000, date: 'jun 2021' },
+    { amount: 50000, date: 'mar 2022' },
+    { amount: 100000, date: 'aug 2023' },
+    { amount: 150000, date: 'jun 2024' },
+    { amount: 200000, date: 'may 2025' },
+    { amount: 250000, date: 'jan 2026' },
+  ],
 };
 
 // the molz life dashboard. '#' until it ships: the homepage shows it as coming soon.

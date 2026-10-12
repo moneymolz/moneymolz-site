@@ -7,6 +7,9 @@ export const usd = (n: number) => usdFmt.format(n);
 export const short = (n: number) =>
   n >= 1_000_000 ? `${+(n / 1_000_000).toFixed(2)}m` : n >= 1000 ? `${+(n / 1000).toFixed(1)}k` : `${n}`;
 
+/** signed short: -25000 -> "−25k" (true minus sign) */
+export const signedShort = (n: number) => (n < 0 ? `\u2212${short(-n)}` : short(n));
+
 /** "$274k" */
 export const usdShort = (n: number) => `$${short(n)}`;
 
