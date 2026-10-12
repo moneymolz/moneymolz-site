@@ -23,12 +23,39 @@ export const ledgerRows = [
   { label: '401k per paycheck', value: '26%' },
 ];
 
-export const proof = { since: '2021', press: ['cnbc', 'acorns'] };
-
 // the molz life dashboard. '#' until it ships: the homepage shows it as coming soon.
 export const molzLifeHref = '#';
 // where the 1:1 session page lives
 export const workWithMeHref = '/work-with-me';
+
+// the bento grid under the hero. null values show "not synced yet".
+// an href of '#' shows the tile as "coming soon" instead of a dead link.
+export const bento = {
+  moneyMap: { href: '#money-map' },
+  molzLife: {
+    href: molzLifeHref,
+    savingsRate: null as number | null, // this month's savings rate, e.g. 34 for 34%
+  },
+  milestones: { href: '#goal-title' },
+  investing: {
+    href: '#',
+    // biggest buckets first, as % of invested money, e.g. [{ label: 'index funds', pct: 62 }, ...]
+    allocation: [] as { label: string; pct: number }[],
+  },
+  travel: {
+    href: '#',
+    photo: '/anmol.jpg',
+    alt: 'Anmol on a balcony in Dubrovnik at sunset',
+    latest: 'dubrovnik, july 2026',
+    next: null as string | null, // where next, e.g. 'lisbon in march'
+  },
+  slowYears: {
+    href: '#',
+    note: null as string | null, // one line from the latest note
+  },
+};
+
+export const proof = { since: '2021', press: ['cnbc', 'acorns'] };
 
 export const links: LinkItem[] = [
   { label: 'build your dashboard with me', href: workWithMeHref, badge: 'new' },
@@ -101,3 +128,7 @@ export const moneyMap = {
   ],
 };
 // ======================
+
+// stops after the paycheck, for the bento tile ("paycheck in, 7 destinations")
+export const mapDestinations =
+  1 + 1 + moneyMap.branches.length + 1 + 1 + 1; // first, hub, branches, cards, investing, cashback

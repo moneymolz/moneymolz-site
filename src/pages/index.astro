@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import { netWorth, ledgerRows, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMap } from '../data/site';
 import { hasUrl, isPlaceholder, stripPlaceholders, short } from '../lib/format';
 import { NetWorthCard } from '../components/NetWorthCard';
+import Bento from '../components/Bento.astro';
 
 const goal = { current: Math.round(netWorth.current / 1000), target: Math.round(netWorth.goal / 1000) };
 
@@ -74,6 +75,8 @@ const aboutRest = aboutText.slice(1);
           />
         </div>
       </section>
+
+      <Bento />
 
       <section class="goal reveal" aria-labelledby="goal-title">
         <div class="goal-head">
@@ -362,8 +365,6 @@ const aboutRest = aboutText.slice(1);
   .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
   .split-head { display: flex; flex-direction: column; gap: 12px; }
   .split-head p { margin: 0; max-width: 36ch; color: rgb(var(--ink-soft)); }
-  .groups { display: flex; flex-direction: column; gap: 28px; }
-  .group h3 { margin: 0 0 8px; font-size: 15px; font-weight: 400; letter-spacing: 0.06em; color: rgb(var(--ink-soft)); }
   .rows { border-top: 1px solid rgb(var(--line)); }
   .rows li { border-bottom: 1px solid rgb(var(--line)); }
   .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; text-decoration: none; }
@@ -477,7 +478,6 @@ const aboutRest = aboutText.slice(1);
     .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .split h2 { font-size: 56px; }
     .split-head p { font-size: 18px; }
-    .groups { gap: 36px; }
 
     .mapwrap h2 { font-size: 56px; }
     .map { max-width: 720px; width: 100%; margin-left: auto; margin-right: auto; }
