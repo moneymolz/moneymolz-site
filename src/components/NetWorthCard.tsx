@@ -21,8 +21,9 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
   const monthsLeft = monthDelta && monthDelta > 0 ? Math.ceil(remaining / monthDelta) : null;
   const up = (monthDelta ?? 0) >= 0;
   const next = milestones.find((m) => netWorth < m);
-  // keep the "i am here" note inside the card at either end of the rail
-  const herePos = Math.min(Math.max(pct, 14), 86);
+  // the "i am here" arrow tip sits exactly at the end of the filled bar; near the start of the
+  // rail the note flips to the other side of the arrow so it stays inside the card
+  const flip = pct < 35;
 
   return (
     <section
@@ -68,13 +69,16 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
 
         <div className="relative h-8" aria-hidden="true">
           <span
-            className="absolute bottom-0.5 flex -translate-x-full items-end gap-0.5 whitespace-nowrap font-display text-lg italic leading-none text-molz"
-            style={{ left: `${herePos}%` }}
+            className={`absolute bottom-0 flex items-end gap-0.5 whitespace-nowrap font-display text-lg italic leading-none text-molz ${
+              flip ? 'flex-row-reverse' : '-translate-x-full'
+            }`}
+            style={{ left: `${pct}%` }}
           >
             i am here
-            <svg width="22" height="18" viewBox="0 0 22 18" fill="none" className="translate-y-1">
-              <path d="M2 3c8 0 14 3 16 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M14.5 11.5 18 14.5l2-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            {/* arrow tip is the svg's bottom corner, so it lands on the end of the bar */}
+            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" className={`shrink-0 translate-y-1.5 ${flip ? '-scale-x-100' : ''}`}>
+              <path d="M1 4c9 0 16 4 20 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M16.5 16 21 19.5l.5-5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
         </div>
