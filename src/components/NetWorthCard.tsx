@@ -11,10 +11,9 @@ type Props = {
   monthDelta: number | null; // change this month, in dollars. null hides the chip
   milestones: number[]; // e.g. [100000, 200000, 300000]
   series: number[]; // last 12 month-end values for the sparkline
-  asOf: string | null; // e.g. 'oct 11'
 };
 
-export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, milestones, series, asOf }: Props) {
+export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, milestones, series }: Props) {
   const { ref, seen } = useInView<HTMLElement>();
   const shown = useCountUp(netWorth, seen);
   const pct = Math.min(netWorth / goal, 1) * 100;
@@ -129,10 +128,6 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
           {monthsLeft ? `, about ${monthsLeft} months at this pace.` : '.'}
         </p>
       </div>
-
-      <p className="m-0 mt-6 border-t border-line pt-4 text-xs text-ink-soft">
-        self-reported, not audited.{asOf && ` last synced ${asOf}.`}
-      </p>
     </section>
   );
 }

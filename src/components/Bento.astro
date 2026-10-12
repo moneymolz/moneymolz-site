@@ -137,7 +137,7 @@ const notSynced = 'text-sm text-ink-soft italic';
 
         {t.key === 'travel' && (
           <>
-            <img src={bento.travel.photo} alt={bento.travel.alt} loading="lazy" class="absolute inset-0 h-full w-full object-cover object-[50%_30%]" />
+            <img src={bento.travel.photo} alt={bento.travel.alt} loading="lazy" class="absolute inset-0 h-full w-full object-cover" style={`object-position:${bento.travel.photoPosition}`} />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" aria-hidden="true"></div>
             <div class="relative mt-auto p-6 text-white">
               <p class="m-0 text-xs font-semibold tracking-[0.08em] text-white/85">solo travel</p>

@@ -33,6 +33,10 @@
 }
 
 @layer base {
+  /* anchor links (like "see the money map") glide instead of jumping */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  [id] { scroll-margin-top: 24px; }
   /* the one piece of tailwind's preflight we need: border utilities set width only */
   *, ::before, ::after { border-width: 0; border-style: solid; border-color: rgb(var(--line)); }
   body { @apply bg-paper font-sans text-ink-soft antialiased; }

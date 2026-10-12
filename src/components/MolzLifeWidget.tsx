@@ -28,7 +28,6 @@ export type MolzPeriod = {
 
 export type MolzData = {
   isSample?: boolean; // shows a "sample data" chip
-  asOf: string | null;
   periods: MolzPeriod[];
   allocation: { key: AllocKey; label: string; value: number; series?: number[] }[];
   goals: { id: string; label: string; current: number; target: number; due?: string; note: string }[];
@@ -191,7 +190,6 @@ export function MolzLifeWidget({ data, ctaHref }: { data: MolzData; ctaHref?: st
             <span className="mb-2 inline-block rounded-full bg-molz-tint px-3 py-1 text-xs font-semibold text-molz">sample data</span>
           )}
           <h2 className="m-0 font-serif text-3xl font-normal text-ink">peek at my dashboard</h2>
-          <p className="m-0 mt-1 text-sm text-ink-soft">{data.asOf ? `last synced ${data.asOf}` : 'not synced yet'}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {data.periods.length > 1 && (

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { MolzLifeWidget } from '../components/MolzLifeWidget';
 import { demoData } from '../data/demo';
-import { molzLifeHref } from '../data/site';
+import { molzLifeHref, siteUpdated } from '../data/site';
 import { hasUrl } from '../lib/format';
 
 // ===== EDIT THESE =====
@@ -40,7 +40,7 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
       <header class="mast">
         <div class="rule thick"></div>
         <div class="mast-row">
-          <span class="mast-meta">est. 2021</span>
+          <span class="mast-meta">est. 2021 · updated {siteUpdated}</span>
           <a class="wordmark" href="/">moneymolz</a>
           <nav>
             <a href="/">home</a>
@@ -194,6 +194,10 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
   .rule.thick { height: 4px; }
   .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 2px; }
   .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: rgb(var(--ink-soft)); }
+  @media (max-width: 599px) {
+    .mast-row { flex-wrap: wrap; row-gap: 0; }
+    .mast-meta { order: 3; flex-basis: 100%; padding-bottom: 4px; }
+  }
   .wordmark { font-family: var(--display); font-size: 22px; color: rgb(var(--ink)); text-decoration: none; }
   .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
   .mast nav a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }

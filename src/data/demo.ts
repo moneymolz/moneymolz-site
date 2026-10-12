@@ -7,7 +7,6 @@ import type { MolzData } from '../components/MolzLifeWidget';
 
 export const demoData: MolzData = {
   isSample: true,
-  asOf: 'oct 11',
   periods: [
     {
       id: 'monthly',

@@ -72,13 +72,26 @@ function Detail({ stage, onClose }: { stage: MapStage; onClose: () => void }) {
 }
 
 export function MoneyMap({ stages, edges }: Props) {
-  const [open, setOpen] = useState<string | null>(stages[0]?.id ?? null);
+  const [open, setOpen] = useState<string | null>(null);
   const [mode, setMode] = useState<'map' | 'list' | null>(null); // null = map on md+, list below
   const [lit, setLit] = useState<string | null>(null); // hovered or focused stop on the map
   const rootRef = useRef<HTMLDivElement>(null);
   const userActed = useRef(false);
   const { ref: mapRef, seen } = useInView<HTMLDivElement>(0.25);
   const [box, setBox] = useState({ w: 0, h: 0 }); // node map size in px, so lines aren't stretched
+  const [wide, setWide] = useState(false); // md+ screens show the node map by default
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const sync = () => setWide(mq.matches);
+    const raf = requestAnimationFrame(sync);
+    mq.addEventListener('change', sync);
+    return () => {
+      cancelAnimationFrame(raf);
+      mq.removeEventListener('change', sync);
+    };
+  }, []);
 
   useEffect(() => {
     const el = mapRef.current;
@@ -114,6 +127,18 @@ export function MoneyMap({ stages, edges }: Props) {
     window.addEventListener('hashchange', fromHash);
     return () => window.removeEventListener('hashchange', fromHash);
   }, [stages]);
+
+  // on the node map, an open stop shows as a pop-up; the list opens stops in place instead
+  const mapShown = mode === 'map' || (mode === null && wide);
+  useEffect(() => {
+    const d = dialogRef.current;
+    if (!d) return;
+    if (open && mapShown) {
+      if (!d.open) d.showModal();
+    } else if (d.open) {
+      d.close();
+    }
+  }, [open, mapShown]);
 
   // keep the url in sync once the visitor opens or closes something
   useEffect(() => {
@@ -159,7 +184,8 @@ export function MoneyMap({ stages, edges }: Props) {
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- keyboard handling for the buttons inside
     <div ref={rootRef} onKeyDown={onKeyDown} className="mt-6">
       {/* map / list override, only where the map fits */}
-      <div className="mb-4 hidden justify-end md:flex">
+      <div className="mb-4 hidden items-center justify-between gap-4 md:flex">
+        <p className="m-0 text-sm text-ink-soft">{mode !== 'list' ? "pick a stop to see what's inside." : ''}</p>
         <div role="group" aria-label="money map view" className="inline-flex rounded-full bg-sand p-1">
           {([['map', Network], ['list', List]] as const).map(([m, Icon]) => {
             const active = m === 'map' ? showingMap : !showingMap;
@@ -250,20 +276,28 @@ export function MoneyMap({ stages, edges }: Props) {
               );
             })}
           </div>
-
-          <div
-            id="mm-detail"
-            role="region"
-            aria-labelledby={openStage ? 'mm-detail-title' : undefined}
-            aria-label={openStage ? undefined : 'money map details'}
-            className="rounded-2xl border border-line bg-card p-6"
-          >
-            {openStage
-              ? <Detail stage={openStage} onClose={() => choose(null)} />
-              : <p className="m-0 text-sm text-ink-soft">pick a stop on the map to see what's inside.</p>}
-          </div>
         </div>
       </div>
+
+      {/* stop details as a pop-up over the map. click outside, press escape, or hit × to close */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- backdrop click; escape is handled natively */}
+      <dialog
+        ref={dialogRef}
+        id="mm-detail"
+        aria-labelledby="mm-detail-title"
+        onClose={() => {
+          userActed.current = true;
+          setOpen(null);
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) dialogRef.current?.close();
+        }}
+        className="m-auto max-h-[85vh] w-[min(560px,calc(100vw-32px))] overflow-y-auto rounded-2xl border border-line bg-card p-0 font-sans text-ink-soft shadow-[0_20px_60px_rgba(28,25,23,.18)] backdrop:bg-black/40 backdrop:backdrop-blur-[2px]"
+      >
+        <div className="p-6 sm:p-8">
+          {mapShown && openStage && <Detail stage={openStage} onClose={() => dialogRef.current?.close()} />}
+        </div>
+      </dialog>
 
       {/* accordion list */}
       <ol className={`relative m-0 list-none space-y-4 p-0 ${listClass}`}>
