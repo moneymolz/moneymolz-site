@@ -115,12 +115,6 @@ const aboutRest = aboutText.slice(1);
         </section>
       )}
 
-      <section id="money-map" class="mapwrap">
-        <div class="kicker reveal">the money map</div>
-        <h2 class="reveal">where every paycheck goes</h2>
-        <MoneyMap client:load stages={stages} edges={mapEdges} />
-      </section>
-
       <section class="topics reveal">
         <h2>what i post about</h2>
         <ul>
@@ -137,6 +131,12 @@ const aboutRest = aboutText.slice(1);
             </li>
           ))}
         </ul>
+      </section>
+
+      <section id="money-map" class="mapwrap">
+        <div class="kicker reveal">the money map</div>
+        <h2 class="reveal">where every paycheck goes</h2>
+        <MoneyMap client:load stages={stages} edges={mapEdges} />
       </section>
 
       <footer class="seen reveal">
@@ -267,7 +267,6 @@ const aboutRest = aboutText.slice(1);
 
 
 
-
   /* hover micro-interactions */
   a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
   a.link:hover::after { opacity: 1; transform: none; }
@@ -315,7 +314,6 @@ const aboutRest = aboutText.slice(1);
     .avatar { width: 128px; height: 160px; }
     .lede-row { gap: 24px; }
     .links { margin-top: 20px; }
-
 
     .about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .about h2 { font-size: 56px; }
