@@ -74,32 +74,35 @@ const notSynced = 'text-sm text-ink-soft italic';
         )}
 
         {t.key === 'life' && (
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <p class="eyebrow m-0">molz life dashboard</p>
+          <div class="flex flex-1 flex-col">
+            <p class="eyebrow m-0">molz life dashboard</p>
+            {/* centered in whatever height the row gives this tile */}
+            <div class="my-auto flex items-center justify-between gap-6 pt-4">
+              <div>
+                {life.savingsRate === null
+                  ? <p class="m-0 font-serif text-2xl leading-tight text-ink">a peek at my dashboard</p>
+                  : (
+                    <>
+                      <p class="m-0 text-sm">{life.savingsLabel}</p>
+                      <p class="m-0 mt-1 text-[44px] font-semibold leading-none tracking-tight tabular-nums text-ink">{life.savingsRate}%</p>
+                      <p class="m-0 mt-3 max-w-[22ch] text-sm leading-snug text-ink-soft">{life.savingsNote}</p>
+                    </>
+                  )}
+              </div>
               {life.savingsRate === null
-                ? <p class="m-0 mt-2 font-serif text-2xl leading-tight text-ink">a peek at my dashboard</p>
+                ? (
+                  <span class="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-molz-tint text-molz" aria-hidden="true">
+                    <LayoutDashboard className="h-7 w-7" />
+                  </span>
+                )
                 : (
-                  <>
-                    <p class="m-0 mt-2 text-sm">{life.savingsLabel}</p>
-                    <p class="m-0 mt-1 text-3xl font-semibold tabular-nums text-ink">{life.savingsRate}%</p>
-                    <p class="m-0 mt-1 text-xs text-ink-soft">{life.savingsNote}</p>
-                  </>
+                  <svg width="96" height="96" viewBox="0 0 64 64" class="shrink-0 -rotate-90" aria-hidden="true">
+                    <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" class="stroke-sand" />
+                    <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" stroke-linecap="round" class="stroke-molz"
+                      stroke-dasharray={ring.c} stroke-dashoffset={ring.c * (1 - Math.min(life.savingsRate, 100) / 100)} />
+                  </svg>
                 )}
             </div>
-            {life.savingsRate === null
-              ? (
-                <span class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-molz-tint text-molz" aria-hidden="true">
-                  <LayoutDashboard className="h-6 w-6" />
-                </span>
-              )
-              : (
-                <svg width="64" height="64" viewBox="0 0 64 64" class="shrink-0 -rotate-90" aria-hidden="true">
-                  <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" class="stroke-sand" />
-                  <circle cx="32" cy="32" r={ring.r} fill="none" stroke-width="6" stroke-linecap="round" class="stroke-molz"
-                    stroke-dasharray={ring.c} stroke-dashoffset={ring.c * (1 - Math.min(life.savingsRate, 100) / 100)} />
-                </svg>
-              )}
           </div>
         )}
 
