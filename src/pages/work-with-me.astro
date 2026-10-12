@@ -85,6 +85,38 @@ const steps = [
 
       <section class="split reveal">
         <div class="split-head">
+          <h2>what you'll walk away with</h2>
+          <p>a dashboard like this, built around your numbers.</p>
+        </div>
+        <div class="dash">
+          <div class="dash-card dash-main">
+            <span class="dash-label">net worth</span>
+            <span class="dash-big">$132,400</span>
+            <span class="dash-sub">+$3,200 this month</span>
+          </div>
+          <div class="dash-card">
+            <span class="dash-label">monthly spend</span>
+            <span class="dash-num">$4,180</span>
+          </div>
+          <div class="dash-card">
+            <span class="dash-label">FI progress</span>
+            <span class="dash-num">31%</span>
+          </div>
+          <div class="dash-card dash-wide">
+            <span class="dash-label">where it lives</span>
+            <ul class="dash-rows">
+              <li><span>401k</span><b>$58,200</b></li>
+              <li><span>roth ira</span><b>$24,600</b></li>
+              <li><span>high-yield savings</span><b>$18,000</b></li>
+              <li><span>brokerage</span><b>$31,600</b></li>
+            </ul>
+          </div>
+          <p class="dash-cap">sample data, not mine.</p>
+        </div>
+      </section>
+
+      <section class="split reveal">
+        <div class="split-head">
           <h2>how it works</h2>
         </div>
         <ul class="rows">
@@ -215,6 +247,24 @@ const steps = [
   .row-note { font-size: 15px; color: var(--muted); }
   .about-text { display: flex; flex-direction: column; gap: 16px; }
   .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
+
+  /* sample dashboard mockup */
+  .dash { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dash-card {
+    background: #fff; border: 1px solid var(--divider); border-radius: 14px;
+    padding: 16px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .dash-main { grid-column: span 2; background: linear-gradient(135deg, var(--peach), var(--mint)); border: none; }
+  .dash-wide { grid-column: span 2; }
+  .dash-label { font-size: 13px; letter-spacing: 0.14em; color: var(--kicker); }
+  .dash-big { font-family: var(--display); font-size: 44px; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
+  .dash-num { font-family: var(--display); font-size: 30px; color: var(--ink); }
+  .dash-sub { font-size: 14px; color: var(--body); }
+  .dash-rows { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; }
+  .dash-rows li { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; font-size: 15px; }
+  .dash-rows li + li { border-top: 1px dotted var(--divider); }
+  .dash-rows b { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .dash-cap { grid-column: span 2; margin: 0; font-size: 13px; font-style: italic; color: var(--kicker); }
 
   .cta { display: flex; }
   .cta .link.primary { flex: 1; justify-content: center; }
