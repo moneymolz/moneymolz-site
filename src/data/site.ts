@@ -44,8 +44,12 @@ export const bento = {
   milestones: { href: '#goal-title' },
   investing: {
     href: '#',
-    // biggest buckets first, as % of invested money, e.g. [{ label: 'index funds', pct: 62 }, ...]
-    allocation: [] as { label: string; pct: number }[],
+    // biggest holdings first, as % of everything invested. percentages only, no dollar amounts.
+    allocation: [
+      { label: 'vti', pct: 49 },
+      { label: 'sgov', pct: 18 },
+      { label: 'vxus', pct: 14 },
+    ] as { label: string; pct: number }[],
   },
   travel: {
     href: '#',
