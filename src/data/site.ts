@@ -2,6 +2,9 @@
 // every number and label on the homepage lives here. components only read from this file.
 // a value set to null shows "not synced yet" (or hides) instead of a made-up number.
 
+// shows once, at the top of every page: "est. 2021 · updated oct 12". change it when you update numbers.
+export const siteUpdated = 'oct 12';
+
 export type LinkItem = { label: string; href: string; badge?: string; primary?: boolean };
 
 export const netWorth = {
@@ -15,8 +18,6 @@ export const netWorth = {
   // month-end history for the sparkline. left empty on purpose: anything here ships in the
   // page source, even though the sparkline doesn't print the numbers.
   series: [] as number[],
-  // when these numbers were last updated, e.g. 'oct 11'. null leaves the date off.
-  asOf: 'oct 12' as string | null,
 };
 
 // the molz life dashboard. '#' until it ships: the homepage shows it as coming soon.
@@ -59,8 +60,6 @@ export const bento = {
     note: 'early 2026: unemployed for ~3 months. net worth dropped by $8k.' as string | null,
   },
 };
-
-export const proof = { since: '2021', press: ['cnbc', 'acorns'] };
 
 export const links: LinkItem[] = [
   { label: 'build your dashboard with me', href: workWithMeHref, badge: 'new' },
@@ -117,8 +116,6 @@ export type MapStage = {
   details: { label: string; value: string }[];
   col: 0 | 1 | 2 | 3;
 };
-
-export const moneyMapUpdated = 'september 2026';
 
 export const stages: MapStage[] = [
   {

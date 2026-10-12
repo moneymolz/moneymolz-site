@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 
-import { netWorth, avatar, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
+import { netWorth, avatar, siteUpdated, molzLifeHref, links, topics, instagram, about, photos, startHere, stages, mapEdges } from '../data/site';
 import { hasUrl, isPlaceholder, stripPlaceholders } from '../lib/format';
 import { NetWorthCard } from '../components/NetWorthCard';
 import Bento from '../components/Bento.astro';
@@ -28,7 +28,7 @@ const aboutRest = aboutText.slice(1);
       <header class="mast">
         <div class="rule thick"></div>
         <div class="mast-row">
-          <span class="mast-meta">est. 2021</span>
+          <span class="mast-meta">est. 2021 · updated {siteUpdated}</span>
           <span class="wordmark">moneymolz</span>
           <nav>
             <a href="#about">about</a>
@@ -52,7 +52,6 @@ const aboutRest = aboutText.slice(1);
             <a class="btn-solid" href="#money-map">see the money map</a>
             {hasUrl(molzLifeHref) && <a class="text-link" href={molzLifeHref}>peek at my dashboard</a>}
           </div>
-          <p class="proof">since {proof.since} · covered by {proof.press.join(' and ')}</p>
           <ul class="links">
             {shownLinks.map((l) => (
               <li>
@@ -73,7 +72,6 @@ const aboutRest = aboutText.slice(1);
             monthDelta={netWorth.monthDelta}
             milestones={netWorth.milestones}
             series={netWorth.series}
-            asOf={netWorth.asOf}
           />
         </div>
       </section>
@@ -120,7 +118,6 @@ const aboutRest = aboutText.slice(1);
       <section id="money-map" class="mapwrap">
         <div class="kicker reveal">the money map</div>
         <h2 class="reveal">where every paycheck goes</h2>
-        <p class="map-updated reveal">updated {moneyMapUpdated}</p>
         <MoneyMap client:load stages={stages} edges={mapEdges} />
       </section>
 
@@ -180,6 +177,10 @@ const aboutRest = aboutText.slice(1);
   .rule.thick { height: 4px; }
   .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 2px; }
   .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: rgb(var(--ink-soft)); }
+  @media (max-width: 599px) {
+    .mast-row { flex-wrap: wrap; row-gap: 0; }
+    .mast-meta { order: 3; flex-basis: 100%; padding-bottom: 4px; }
+  }
   .wordmark { font-family: var(--display); font-size: 22px; color: rgb(var(--ink)); }
   .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
   .mast a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
@@ -194,7 +195,6 @@ const aboutRest = aboutText.slice(1);
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 4px; }
   .text-link { font-weight: 600; font-size: 16px; color: rgb(var(--molz)); text-underline-offset: 4px; text-decoration: none; }
   .text-link:hover { text-decoration: underline; }
-  .proof { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
   .hero-card { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
   .lede-row { display: flex; align-items: flex-start; gap: 16px; }
@@ -251,7 +251,6 @@ const aboutRest = aboutText.slice(1);
   /* money map */
   .mapwrap { display: flex; flex-direction: column; gap: 12px; }
   .mapwrap h2 { margin: 0; font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
-  .map-updated { margin: 0; font-size: 14px; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
 
   /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
