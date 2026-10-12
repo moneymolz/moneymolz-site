@@ -64,7 +64,6 @@ export const bento = {
 
 export const links: LinkItem[] = [
   { label: 'build your dashboard with me', href: workWithMeHref, badge: 'new' },
-  { label: 'latest net worth update', href: '#net-worth', primary: true },
   { label: 'join the newsletter', href: 'https://moneymolz.substack.com/' },
   { label: 'molz life: a peek at my dashboard', href: molzLifeHref },
   { label: '[YOUR LINK]', href: '#' },

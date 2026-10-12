@@ -24,6 +24,8 @@ const look = (id: string) => LOOK[id] ?? { icon: Circle, tone: 'bg-sand text-ink
 const listTone = (id: string) => (id === 'hub' ? 'bg-molz-tint text-molz' : look(id).tone);
 
 const HASH = '#money-map';
+// long values ("every 15th and end of month") sit under their label instead of beside it
+const isLong = (v: string) => v.length > 16;
 const COL_X = [12, 37, 62, 86]; // % across the node map
 
 /** spread each column's stops evenly top to bottom */
@@ -61,9 +63,9 @@ function Detail({ stage, onClose }: { stage: MapStage; onClose: () => void }) {
       {stage.note && <p className="m-0 mt-4 text-sm leading-6 text-ink-soft">{stage.note}</p>}
       <dl className="m-0 mt-4 grid gap-2 md:grid-cols-2">
         {stage.details.map((d) => (
-          <div key={d.label} className="flex items-baseline justify-between gap-3 rounded-xl bg-sand px-4 py-3">
+          <div key={d.label} className={`flex gap-3 rounded-xl bg-sand px-4 py-3 ${isLong(d.value) ? 'flex-col items-start gap-0.5' : 'items-baseline justify-between'}`}>
             <dt className="text-sm text-ink-soft">{d.label}</dt>
-            <dd className="m-0 shrink-0 text-right text-sm font-semibold text-ink">{d.value}</dd>
+            <dd className={`m-0 text-sm font-semibold text-ink ${isLong(d.value) ? '' : 'shrink-0 text-right'}`}>{d.value}</dd>
           </div>
         ))}
       </dl>
@@ -345,9 +347,9 @@ export function MoneyMap({ stages, edges }: Props) {
                       {s.note && <p className="m-0 text-sm leading-6 text-ink-soft">{s.note}</p>}
                       <dl className="m-0 mt-4 grid gap-2 sm:grid-cols-2">
                         {s.details.map((d) => (
-                          <div key={d.label} className="flex items-baseline justify-between gap-3 rounded-xl bg-sand px-4 py-3">
+                          <div key={d.label} className={`flex gap-3 rounded-xl bg-sand px-4 py-3 ${isLong(d.value) ? 'flex-col items-start gap-0.5' : 'items-baseline justify-between'}`}>
                             <dt className="text-sm text-ink-soft">{d.label}</dt>
-                            <dd className="m-0 shrink-0 text-right text-sm font-semibold text-ink">{d.value}</dd>
+                            <dd className={`m-0 text-sm font-semibold text-ink ${isLong(d.value) ? '' : 'shrink-0 text-right'}`}>{d.value}</dd>
                           </div>
                         ))}
                       </dl>
