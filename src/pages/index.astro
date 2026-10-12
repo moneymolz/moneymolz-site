@@ -44,7 +44,7 @@ const aboutRest = aboutText.slice(1);
           <h1>every dollar, <em class="accent">out loud</em>.</h1>
           {lede && (
             <div class="lede-row">
-              <img class="avatar" src={avatar.src} alt={avatar.alt} width="72" height="72" />
+              <img class="avatar" src={avatar.src} alt={avatar.alt} width="128" height="160" />
               <p class="lede">{lede}</p>
             </div>
           )}
@@ -199,8 +199,8 @@ const aboutRest = aboutText.slice(1);
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
   .lede-row { display: flex; align-items: flex-start; gap: 16px; }
   .avatar {
-    width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover;
-    border: 2px solid rgb(var(--card)); box-shadow: 0 0 0 1px rgb(var(--line)), 0 1px 2px rgba(28, 25, 23, 0.06);
+    width: 88px; height: 110px; flex: none; border-radius: 12px; object-fit: cover;
+    border: 1px solid rgb(var(--line)); box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
     margin-top: 4px;
   }
 
@@ -312,7 +312,8 @@ const aboutRest = aboutText.slice(1);
     .hero-text { gap: 20px; padding-bottom: 8px; }
     .hero h1 { font-size: 72px; line-height: 76px; }
     .lede { font-size: 19px; }
-    .avatar { width: 72px; height: 72px; }
+    .avatar { width: 128px; height: 160px; }
+    .lede-row { gap: 24px; }
     .links { margin-top: 20px; }
 
 

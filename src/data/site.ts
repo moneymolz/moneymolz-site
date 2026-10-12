@@ -80,7 +80,7 @@ export const topics: { label: string; href: string }[] = [
   { label: 'solo travel', href: '' },
 ];
 
-// small round photo next to the hero intro
+// small photo next to the hero intro
 export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol on a balcony in Dubrovnik at sunset' };
 export const instagram = 'https://instagram.com/moneymolz';
 
