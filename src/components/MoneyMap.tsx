@@ -24,7 +24,7 @@ const look = (id: string) => LOOK[id] ?? { icon: Circle, tone: 'bg-sand text-ink
 const listTone = (id: string) => (id === 'hub' ? 'bg-molz-tint text-molz' : look(id).tone);
 
 const HASH = '#money-map';
-const COL_X = [11, 36, 61, 87]; // % across the node map
+const COL_X = [12, 37, 62, 86]; // % across the node map
 
 /** spread each column's stops evenly top to bottom */
 function layout(stages: MapStage[]) {
@@ -59,7 +59,7 @@ function Detail({ stage, onClose }: { stage: MapStage; onClose: () => void }) {
         </button>
       </div>
       {stage.note && <p className="m-0 mt-4 text-sm leading-6 text-ink-soft">{stage.note}</p>}
-      <dl className="m-0 mt-4 grid gap-2">
+      <dl className="m-0 mt-4 grid gap-2 md:grid-cols-2">
         {stage.details.map((d) => (
           <div key={d.label} className="flex items-baseline justify-between gap-3 rounded-xl bg-sand px-4 py-3">
             <dt className="text-sm text-ink-soft">{d.label}</dt>
@@ -183,8 +183,8 @@ export function MoneyMap({ stages, edges }: Props) {
 
       {/* node map */}
       <div className={mapClass}>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <div ref={mapRef} className="relative h-[560px] rounded-2xl border border-line bg-card" onMouseLeave={() => setLit(null)}>
+        <div className="grid gap-6">
+          <div ref={mapRef} className="relative h-[580px] rounded-2xl border border-line bg-card lg:h-[760px]" onMouseLeave={() => setLit(null)}>
             <svg className="absolute inset-0 h-full w-full" viewBox={`0 0 ${box.w || 100} ${box.h || 100}`} aria-hidden="true">
               {box.w > 0 && edges.map((ed) => {
                 const a = pos[ed.from], b = pos[ed.to];
@@ -230,7 +230,7 @@ export function MoneyMap({ stages, edges }: Props) {
                   onFocus={() => setLit(s.id)}
                   onBlur={() => setLit(null)}
                   style={{ left: `${p.x}%`, top: `${p.y}%` }}
-                  className={`absolute flex w-[9.5rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-start gap-2 rounded-xl border p-2.5 text-left font-sans shadow-[0_1px_2px_rgba(28,25,23,.04)] transition duration-150 hover:-translate-y-[calc(50%+2px)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-molz motion-reduce:transition-none motion-reduce:hover:-translate-y-1/2 ${
+                  className={`absolute flex w-[9.5rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-start gap-2 rounded-xl border p-2.5 lg:w-[14rem] lg:gap-3 lg:p-3.5 text-left font-sans shadow-[0_1px_2px_rgba(28,25,23,.04)] transition duration-150 hover:-translate-y-[calc(50%+2px)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-molz motion-reduce:transition-none motion-reduce:hover:-translate-y-1/2 ${
                     isHub ? 'border-transparent bg-[#B94A33] text-white' : 'border-line bg-card text-ink'
                   } ${isOpen ? 'ring-2 ring-molz ring-offset-2 ring-offset-card' : ''} ${
                     isLitNode(s.id) ? 'opacity-100' : 'opacity-40'
@@ -240,8 +240,8 @@ export function MoneyMap({ stages, edges }: Props) {
                     <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-serif text-[15px] leading-tight">{s.title}</span>
-                    <span className={`mt-0.5 line-clamp-2 block text-xs leading-snug ${isHub ? 'text-white/85' : 'text-ink-soft'}`}>
+                    <span className="block font-serif text-[15px] leading-tight lg:text-lg">{s.title}</span>
+                    <span className={`mt-0.5 line-clamp-2 block text-xs leading-snug lg:mt-1 lg:text-sm ${isHub ? 'text-white/85' : 'text-ink-soft'}`}>
                       {s.headline}
                     </span>
                     {to && <span className="sr-only">, flows to {to}</span>}

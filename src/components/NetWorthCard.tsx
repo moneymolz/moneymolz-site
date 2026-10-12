@@ -7,13 +7,14 @@ type Props = {
   netWorth: number;
   goal: number;
   goalLabel: string; // e.g. '300k by 30'
+  goalDate?: string; // e.g. 'feb 3', shows as "by feb 3"
   monthDelta: number | null; // change this month, in dollars. null hides the chip
   milestones: number[]; // e.g. [100000, 200000, 300000]
   series: number[]; // last 12 month-end values for the sparkline
   asOf: string | null; // e.g. 'oct 11'
 };
 
-export function NetWorthCard({ netWorth, goal, goalLabel, monthDelta, milestones, series, asOf }: Props) {
+export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, milestones, series, asOf }: Props) {
   const { ref, seen } = useInView<HTMLElement>();
   const shown = useCountUp(netWorth, seen);
   const pct = Math.min(netWorth / goal, 1) * 100;
@@ -21,7 +22,7 @@ export function NetWorthCard({ netWorth, goal, goalLabel, monthDelta, milestones
   const monthsLeft = monthDelta && monthDelta > 0 ? Math.ceil(remaining / monthDelta) : null;
   const up = (monthDelta ?? 0) >= 0;
   const next = milestones.find((m) => netWorth < m);
-  // keep the "you are here" note inside the card at either end of the rail
+  // keep the "i am here" note inside the card at either end of the rail
   const herePos = Math.min(Math.max(pct, 14), 86);
 
   return (
@@ -61,6 +62,7 @@ export function NetWorthCard({ netWorth, goal, goalLabel, monthDelta, milestones
         <div className="mb-1 flex items-center justify-between text-sm">
           <span className="inline-flex items-center gap-1.5 font-semibold text-ink">
             <Target className="h-4 w-4 text-molz" aria-hidden="true" /> {goalLabel}
+            {goalDate && <span className="font-normal text-ink-soft">· by {goalDate}</span>}
           </span>
           <span className="tabular-nums text-ink-soft">{Math.round(pct)}%</span>
         </div>
@@ -70,7 +72,7 @@ export function NetWorthCard({ netWorth, goal, goalLabel, monthDelta, milestones
             className="absolute bottom-0.5 flex -translate-x-full items-end gap-0.5 whitespace-nowrap font-display text-lg italic leading-none text-molz"
             style={{ left: `${herePos}%` }}
           >
-            you are here
+            i am here
             <svg width="22" height="18" viewBox="0 0 22 18" fill="none" className="translate-y-1">
               <path d="M2 3c8 0 14 3 16 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               <path d="M14.5 11.5 18 14.5l2-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
