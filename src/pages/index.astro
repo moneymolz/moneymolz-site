@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 
-import { netWorth, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
+import { netWorth, avatar, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
 import { hasUrl, isPlaceholder, stripPlaceholders } from '../lib/format';
 import { NetWorthCard } from '../components/NetWorthCard';
 import Bento from '../components/Bento.astro';
 import { MoneyMap } from '../components/MoneyMap';
+import { ArrowUpRight } from 'lucide-react';
 
 const shownLinks = links.filter((l) => !isPlaceholder(l.label));
 const aboutText = about
@@ -13,7 +14,7 @@ const aboutText = about
   .filter(Boolean);
 const aboutPhotos = photos.filter((ph) => ph.src);
 
-// diary layout: first about paragraph becomes the hero lede (with drop cap),
+// diary layout: first about paragraph becomes the hero lede (next to the round photo),
 // the rest stays in the about section.
 const lede = aboutText[0] ?? '';
 const aboutRest = aboutText.slice(1);
@@ -41,7 +42,12 @@ const aboutRest = aboutText.slice(1);
         <div class="hero-text">
           <p class="dateline">brooklyn, ny</p>
           <h1>every dollar, <em class="accent">out loud</em>.</h1>
-          {lede && <p class="lede">{lede}</p>}
+          {lede && (
+            <div class="lede-row">
+              <img class="avatar" src={avatar.src} alt={avatar.alt} width="72" height="72" />
+              <p class="lede">{lede}</p>
+            </div>
+          )}
           <div class="actions">
             <a class="btn-solid" href="#money-map">see the money map</a>
             {hasUrl(molzLifeHref) && <a class="text-link" href={molzLifeHref}>peek at my dashboard</a>}
@@ -121,7 +127,18 @@ const aboutRest = aboutText.slice(1);
       <section class="topics reveal">
         <h2>what i post about</h2>
         <ul>
-          {topics.map((t, i) => <li><span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t}</li>)}
+          {topics.map((t, i) => (
+            <li>
+              {hasUrl(t.href)
+                ? (
+                  <a class="topic topic-link" href={t.href}>
+                    <span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t.label}
+                    <ArrowUpRight className="t-arrow" aria-hidden="true" />
+                  </a>
+                )
+                : <span class="topic"><span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t.label}</span>}
+            </li>
+          ))}
         </ul>
       </section>
 
@@ -180,9 +197,11 @@ const aboutRest = aboutText.slice(1);
   .proof { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
   .hero-card { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
-  .lede::first-letter {
-    font-family: var(--display); font-size: 54px; float: left;
-    line-height: 0.85; padding: 4px 8px 0 0; color: rgb(var(--ink));
+  .lede-row { display: flex; align-items: flex-start; gap: 16px; }
+  .avatar {
+    width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgb(var(--card)); box-shadow: 0 0 0 1px rgb(var(--line)), 0 1px 2px rgba(28, 25, 23, 0.06);
+    margin-top: 4px;
   }
 
   /* links: a list, not a stack of pills */
@@ -237,14 +256,12 @@ const aboutRest = aboutText.slice(1);
   /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
   @keyframes settle { from { opacity: 0; transform: translateY(22px) scale(0.985); } to { opacity: 1; transform: none; } }
-  @keyframes inkwash { from { color: rgb(var(--molz-tint)); } to { color: rgb(var(--ink)); } }
   .mast { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
   .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
   .hero-text > *:nth-child(n+5) { animation-delay: 0.4s; }
-  .lede::first-letter { animation: inkwash 1.4s ease 0.6s both; }
 
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .js .reveal.in { opacity: 1; transform: none; }
@@ -255,10 +272,10 @@ const aboutRest = aboutText.slice(1);
   /* hover micro-interactions */
   a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
   a.link:hover::after { opacity: 1; transform: none; }
-  .topics li { transition: transform 0.25s ease; }
-  .topics li:hover { transform: translateX(6px); }
+  .topic-link { transition: transform 0.25s ease; }
+  .topic-link:hover { transform: translateX(6px); }
   .t-num { transition: color 0.25s ease; }
-  .topics li:hover .t-num { color: rgb(var(--ink)); }
+  .topic-link:hover .t-num { color: rgb(var(--ink)); }
 
   /* peach accents */
   .hl { background: linear-gradient(to top, rgb(var(--molz-tint)) 36%, transparent 36%); }
@@ -273,7 +290,12 @@ const aboutRest = aboutText.slice(1);
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
   .topics ul { border-top: 1px solid rgb(var(--line)); }
-  .topics li { display: flex; gap: 16px; align-items: baseline; padding: 14px 4px; border-bottom: 1px solid rgb(var(--line)); font-size: 18px; color: rgb(var(--ink)); }
+  .topics li { border-bottom: 1px solid rgb(var(--line)); }
+  .topic { display: flex; gap: 16px; align-items: baseline; padding: 14px 4px; font-size: 18px; color: rgb(var(--ink)); text-decoration: none; }
+  .topic-link { min-height: 44px; }
+  .topic-link:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .t-arrow { width: 18px; height: 18px; margin-left: auto; align-self: center; color: rgb(var(--molz)); transition: transform 0.25s ease; }
+  .topic-link:hover .t-arrow { transform: translate(2px, -2px); }
   .t-num { font-size: 13px; color: rgb(var(--ink-soft)); font-variant-numeric: tabular-nums; }
 
   /* footer */
@@ -291,6 +313,7 @@ const aboutRest = aboutText.slice(1);
     .hero-text { gap: 20px; padding-bottom: 8px; }
     .hero h1 { font-size: 72px; line-height: 76px; }
     .lede { font-size: 19px; }
+    .avatar { width: 72px; height: 72px; }
     .links { margin-top: 20px; }
 
 

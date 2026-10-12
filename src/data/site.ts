@@ -70,7 +70,18 @@ export const links: LinkItem[] = [
   { label: '[YOUR LINK]', href: '#' },
 ];
 
-export const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
+// what i post about. add an instagram post or highlight link to `href` and that topic
+// becomes clickable with an arrow; leave it '' and it shows as plain text.
+export const topics: { label: string; href: string }[] = [
+  { label: 'net worth updates', href: '' },
+  { label: '401k and hsa', href: '' },
+  { label: 'index funds', href: '' },
+  { label: 'budgeting', href: '' },
+  { label: 'solo travel', href: '' },
+];
+
+// small round photo next to the hero intro
+export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol smiling on a balcony in Dubrovnik' };
 export const instagram = 'https://instagram.com/moneymolz';
 
 // about me. anything in [BRACKETS] is hidden until you replace it,
