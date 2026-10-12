@@ -83,7 +83,7 @@ const steps = [
         </ul>
       </section>
 
-      <section class="split reveal">
+      <section class="split split-wide reveal">
         <div class="split-head">
           <h2>what you'll walk away with</h2>
           <p>a dashboard like this, built around your numbers.</p>
@@ -395,6 +395,8 @@ const steps = [
     .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .split h2 { font-size: 56px; }
     .split-head p { font-size: 18px; }
+    .split-wide { display: flex; flex-direction: column; gap: 28px; }
+    .split-wide .split-head { max-width: 640px; }
     .seen { flex-wrap: nowrap; gap: 28px; }
     .seen-label { width: auto; }
     .colophon { width: auto; margin-left: auto; }
