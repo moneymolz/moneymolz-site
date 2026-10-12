@@ -13,6 +13,7 @@ export default {
         paper: c('paper'), card: c('card'), sand: c('sand'), line: c('line'),
         ink: { DEFAULT: c('ink'), soft: c('ink-soft'), mute: c('ink-mute') },
         molz: { DEFAULT: c('molz'), tint: c('molz-tint'), solid: '#B94A33' },
+        teal: { DEFAULT: c('teal'), tint: c('teal-tint'), solid: '#1F6B65' },
         gain: c('gain'), loss: c('loss'), hold: c('hold'), sky: c('sky'),
       },
       fontFamily: {
