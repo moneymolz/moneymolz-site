@@ -1,90 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 
-// ===== EDIT THESE =====
-const links = [
-  { label: 'build your dashboard with me', href: '/work-with-me', badge: 'new' },
-  { label: 'latest net worth update', href: '#goal-title', primary: true },
-  { label: 'join the newsletter', href: 'https://moneymolz.substack.com/' },
-  { label: 'molz life: a peek at my dashboard', href: '#' },
-  { label: '[YOUR LINK]', href: '#' },
-];
+import { netWorth, ledgerRows, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMap } from '../data/site';
+import { hasUrl, isPlaceholder, stripPlaceholders, short } from '../lib/format';
+import { NetWorthCard } from '../components/NetWorthCard';
 
-// current and target are in $k. date shows as "by feb 3".
-const goal = { title: '300k by 30', current: 274, target: 300, date: 'feb 3' };
-const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
-const instagram = 'https://instagram.com/moneymolz';
-
-// about me. anything in [BRACKETS] is hidden until you replace it,
-// and a paragraph that's only a placeholder is left out.
-const about = [
-  "hi, i'm anmol. i've been posting about money on here since 2021, sharing my real numbers: net worth updates, what i'm investing in, and yes, the slow years too.",
-  '[ADD: why you started moneymolz, in your own words]',
-  "i'm based in brooklyn and work in tech. [ADD: something you love outside of money]",
-];
-
-// about photos: put files in /public, then set src like '/trip.jpg'. empty src = hidden.
-// with no photos, the about section switches to a text-only layout.
-const photos = [
-  { src: '', alt: 'you doing something you love' },
-  { src: '', alt: 'a trip or a favorite place' },
-  { src: '', alt: 'wide shot, friends or your setup', wide: true },
-];
-
-// "start here" stays hidden until you add at least one path.
-// example: { prompt: "i just got my first 401k", label: 'watch my 401k basics reel', href: 'https://...' },
-const startHere: { prompt: string; label: string; href: string }[] = [];
-
-// the money map: where every paycheck goes. names + one-line whys, no balances, no account numbers.
-// slide 2 of the moneymap post, as a living section. update names/whys here; the page redraws.
-const moneyMap = {
-  updated: 'september 2026',
-  start: { name: 'paycheck', why: 'lands every 15th and end of month' },
-  firstLabel: 'first',
-  first: [
-    { name: '401k (fidelity)', why: 'retirement first. maxing it out' },
-    { name: 'hsa', why: 'maxed' },
-  ],
-  hub: { name: 'robinhood checking', why: 'the hub. bills and rent flow out of here' },
-  hubLabel: 'from the hub',
-  branches: [
-    { name: 'robinhood savings', why: 'travel + gift buckets' },
-    { name: 'fidelity brokerage', why: 'emergency fund + wedding bucket, in SGOV' },
-  ],
-  cardsLabel: 'credit cards',
-  cardsNote: 'all on autopay, paid off manually every payday',
-  cards: [
-    'chase sapphire preferred',
-    'chase freedom unlimited',
-    'united explorer card',
-    'world of hyatt credit card',
-    'bilt blue',
-    'u.s. bank altitude connect',
-    'robinhood credit card',
-  ],
-  investingLabel: 'investing',
-  investing: [
-    { name: 'robinhood traditional ira', why: '' },
-    { name: 'robinhood roth ira', why: '' },
-    { name: 'ny 529', why: '' },
-  ],
-  cashbackLabel: 'cashback apps',
-  cashback: [
-    { name: 'rakuten', why: 'cash back on stuff i\u2019d buy anyway' },
-    { name: 'fetch', why: 'points for snapping receipts' },
-  ],
-};
-// ======================
+const goal = { current: Math.round(netWorth.current / 1000), target: Math.round(netWorth.goal / 1000) };
 
 const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
 const toGo = Math.max(0, goal.target - goal.current);
 const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) * i));
 
-// a link with href '' or '#' shows as "coming soon" instead of a dead link.
-// anything still named like '[PLACEHOLDER]' is left off the page entirely.
-const hasUrl = (href?: string) => Boolean(href) && href !== '#';
-const isPlaceholder = (text: string) => text.trim().startsWith('[');
-const stripPlaceholders = (text = '') => text.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
 const shownLinks = links.filter((l) => !isPlaceholder(l.label));
 const aboutText = about
   .map(stripPlaceholders)
@@ -96,8 +22,6 @@ const aboutPhotos = photos.filter((ph) => ph.src);
 const lede = aboutText[0] ?? '';
 const aboutRest = aboutText.slice(1);
 
-// build-time dateline, e.g. "september 2026". refreshes on every deploy.
-const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
 ---
 <Base
   title="moneymolz"
@@ -119,9 +43,14 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
 
       <section class="hero">
         <div class="hero-text">
-          <p class="dateline">{buildDate} · brooklyn, ny</p>
-          <h1>the <span class="hl">real numbers</span> behind the money.</h1>
+          <p class="dateline">the ledger · {netWorth.asOf ? `updated ${netWorth.asOf}` : 'brooklyn, ny'}</p>
+          <h1>every dollar, <em class="accent">out loud</em>.</h1>
           {lede && <p class="lede">{lede}</p>}
+          <div class="actions">
+            <a class="btn-solid" href="#money-map">see the money map</a>
+            {hasUrl(molzLifeHref) && <a class="text-link" href={molzLifeHref}>peek at my dashboard</a>}
+          </div>
+          <p class="proof">since {proof.since} · covered by {proof.press.join(' and ')}</p>
           <ul class="links">
             {shownLinks.map((l) => (
               <li>
@@ -132,21 +61,29 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
             ))}
           </ul>
         </div>
-        <figure class="hero-fig">
-          <img class="hero-photo" src="/anmol.jpg" alt="Anmol on a balcony in Dubrovnik at sunset" width="1200" height="1600" />
-          <figcaption>dubrovnik, july 2026.</figcaption>
-        </figure>
+        <div class="hero-card">
+          <NetWorthCard
+            client:load
+            netWorth={netWorth.current}
+            goal={netWorth.goal}
+            goalLabel={netWorth.goalLabel}
+            monthDelta={netWorth.monthDelta}
+            milestones={netWorth.milestones}
+            series={netWorth.series}
+            asOf={netWorth.asOf}
+          />
+        </div>
       </section>
 
       <section class="goal reveal" aria-labelledby="goal-title">
         <div class="goal-head">
           <h2 id="goal-title">the ledger</h2>
-          <span class="goal-date">{goal.title} · by {goal.date}</span>
+          <span class="goal-date">{netWorth.goalLabel} · by {netWorth.goalDate}</span>
         </div>
         <ul class="ledger">
           <li><span>net worth right now</span><span class="dots" aria-hidden="true"></span><b class="goal-now" data-count={goal.current}>${goal.current}k</b></li>
-          <li><span>distance to 300k</span><span class="dots" aria-hidden="true"></span><b>${toGo}k to go</b></li>
-          <li><span>401k per paycheck</span><span class="dots" aria-hidden="true"></span><b>26%</b></li>
+          <li><span>distance to {short(netWorth.goal)}</span><span class="dots" aria-hidden="true"></span><b>${toGo}k to go</b></li>
+          {ledgerRows.map((r) => <li><span>{r.label}</span><span class="dots" aria-hidden="true"></span><b>{r.value}</b></li>)}
         </ul>
         <div
           class="ruler"
@@ -352,15 +289,18 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
   .hero { display: flex; flex-direction: column; gap: 28px; }
   .dateline { margin: 0; font-size: 12px; letter-spacing: 0.22em; color: rgb(var(--ink-soft)); }
   .hero-text { display: flex; flex-direction: column; gap: 16px; }
-  .hero h1 { font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; }
+  .hero h1 { font-family: var(--font-instrument); font-size: 48px; line-height: 52px; letter-spacing: -0.02em; }
+  .hero h1 .accent { font-style: italic; color: rgb(var(--molz)); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 4px; }
+  .text-link { font-weight: 600; font-size: 16px; color: rgb(var(--molz)); text-underline-offset: 4px; text-decoration: none; }
+  .text-link:hover { text-decoration: underline; }
+  .proof { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
+  .hero-card { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
   .lede::first-letter {
     font-family: var(--display); font-size: 54px; float: left;
     line-height: 0.85; padding: 4px 8px 0 0; color: rgb(var(--ink));
   }
-  .hero-fig { margin: 0; background: rgb(var(--card)); border: 1px solid rgb(var(--ink)); padding: 10px 10px 6px; border-radius: 4px; }
-  .hero-photo { width: 100%; height: 360px; object-fit: cover; object-position: 50% 30%; display: block; }
-  .hero-fig figcaption { font-size: 13px; font-style: italic; color: rgb(var(--ink-soft)); padding: 8px 2px 2px; }
 
   /* links: a list, not a stack of pills */
   .links { margin-top: 12px; border-top: 1px solid rgb(var(--line)); }
@@ -455,11 +395,11 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
   @keyframes settle { from { opacity: 0; transform: translateY(22px) scale(0.985); } to { opacity: 1; transform: none; } }
   @keyframes inkwash { from { color: rgb(var(--molz-tint)); } to { color: rgb(var(--ink)); } }
   .mast { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  .hero-fig { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
   .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
+  .hero-text > *:nth-child(n+5) { animation-delay: 0.4s; }
   .lede::first-letter { animation: inkwash 1.4s ease 0.6s both; }
 
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -474,8 +414,6 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
   .js .ruler-fill { width: 0 !important; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s; }
 
   /* hover micro-interactions */
-  .hero-fig { transition: transform 0.35s ease, box-shadow 0.35s ease; }
-  .hero-fig:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0 rgb(var(--molz-tint)); }
   a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
   a.link:hover::after { opacity: 1; transform: none; }
   .topics li { transition: transform 0.25s ease; }
@@ -485,7 +423,6 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
 
   /* peach accents */
   .hl { background: linear-gradient(to top, rgb(var(--molz-tint)) 36%, transparent 36%); }
-  .hero-fig { box-shadow: 10px 10px 0 rgb(var(--molz-tint)); }
   .mast a:hover { text-decoration-color: rgb(var(--molz-tint)); text-decoration-thickness: 2px; }
   .link.primary { background: var(--molz-solid); color: #fff; }
   .link.primary:hover { background: var(--molz-solid-hover); }
@@ -516,9 +453,8 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
       display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
       column-gap: 72px; align-items: center;
     }
-    .hero-photo { height: 640px; border-radius: 2px; }
     .hero-text { gap: 20px; padding-bottom: 8px; }
-    .hero h1 { font-size: 80px; line-height: 0.98; }
+    .hero h1 { font-size: 72px; line-height: 76px; }
     .lede { font-size: 19px; }
     .links { margin-top: 20px; }
 

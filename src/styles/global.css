@@ -45,5 +45,6 @@
     background: var(--molz-solid);
   }
   .btn-solid:hover { background: var(--molz-solid-hover); }
-  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.08em] text-ink-soft; }
+  /* spec eyebrow, kept lowercase to match the site's voice */
+  .eyebrow { @apply text-xs font-semibold tracking-[0.08em] text-ink-soft; }
 }
