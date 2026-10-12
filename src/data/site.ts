@@ -59,8 +59,9 @@ export const bento = {
     next: null as string | null, // where next, e.g. 'lisbon in march'. null hides the line
   },
   slowYears: {
-    href: '#',
-    note: null as string | null, // one line from the latest note
+    href: 'https://www.instagram.com/p/DcXfqy5jX9e/',
+    // one line from the latest note, in your words. null shows "not synced yet".
+    note: 'early 2026: unemployed for ~3 months. net worth dropped by $8k.' as string | null,
   },
 };
 
