@@ -19,11 +19,6 @@ export const netWorth = {
   asOf: 'oct 12' as string | null,
 };
 
-// extra rows in the ledger section, under net worth and distance to goal
-export const ledgerRows = [
-  { label: '401k per paycheck', value: '26%' },
-];
-
 // the molz life dashboard. '#' until it ships: the homepage shows it as coming soon.
 export const molzLifeHref = '#';
 // where the 1:1 session page lives
@@ -41,7 +36,7 @@ export const bento = {
     savingsLabel: 'saved before taxes',
     savingsNote: 'retirement + hsa, as a share of gross pay',
   },
-  milestones: { href: '#goal-title' },
+  milestones: { href: '#net-worth' },
   investing: {
     href: '#',
     // biggest holdings first, as % of everything invested. percentages only, no dollar amounts.
@@ -69,13 +64,24 @@ export const proof = { since: '2021', press: ['cnbc', 'acorns'] };
 
 export const links: LinkItem[] = [
   { label: 'build your dashboard with me', href: workWithMeHref, badge: 'new' },
-  { label: 'latest net worth update', href: '#goal-title', primary: true },
+  { label: 'latest net worth update', href: '#net-worth', primary: true },
   { label: 'join the newsletter', href: 'https://moneymolz.substack.com/' },
   { label: 'molz life: a peek at my dashboard', href: molzLifeHref },
   { label: '[YOUR LINK]', href: '#' },
 ];
 
-export const topics = ['net worth updates', '401k and hsa', 'index funds', 'budgeting', 'solo travel'];
+// what i post about. add an instagram post or highlight link to `href` and that topic
+// becomes clickable with an arrow; leave it '' and it shows as plain text.
+export const topics: { label: string; href: string }[] = [
+  { label: 'net worth updates', href: 'https://www.instagram.com/p/DcXfqy5jX9e/' },
+  { label: '401k and hsa', href: '' },
+  { label: 'index funds', href: '' },
+  { label: 'budgeting', href: '' },
+  { label: 'solo travel', href: '' },
+];
+
+// small round photo next to the hero intro
+export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol on a balcony in Dubrovnik at sunset' };
 export const instagram = 'https://instagram.com/moneymolz';
 
 // about me. anything in [BRACKETS] is hidden until you replace it,

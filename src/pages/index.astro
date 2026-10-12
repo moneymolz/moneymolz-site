@@ -1,17 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 
-import { netWorth, ledgerRows, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
-import { hasUrl, isPlaceholder, stripPlaceholders, short } from '../lib/format';
+import { netWorth, avatar, proof, molzLifeHref, links, topics, instagram, about, photos, startHere, moneyMapUpdated, stages, mapEdges } from '../data/site';
+import { hasUrl, isPlaceholder, stripPlaceholders } from '../lib/format';
 import { NetWorthCard } from '../components/NetWorthCard';
 import Bento from '../components/Bento.astro';
 import { MoneyMap } from '../components/MoneyMap';
-
-const goal = { current: Math.round(netWorth.current / 1000), target: Math.round(netWorth.goal / 1000) };
-
-const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
-const toGo = Math.max(0, goal.target - goal.current);
-const ticks = Array.from({ length: 7 }, (_, i) => Math.round((goal.target / 6) * i));
+import { ArrowUpRight } from 'lucide-react';
 
 const shownLinks = links.filter((l) => !isPlaceholder(l.label));
 const aboutText = about
@@ -19,7 +14,7 @@ const aboutText = about
   .filter(Boolean);
 const aboutPhotos = photos.filter((ph) => ph.src);
 
-// diary layout: first about paragraph becomes the hero lede (with drop cap),
+// diary layout: first about paragraph becomes the hero lede (next to the round photo),
 // the rest stays in the about section.
 const lede = aboutText[0] ?? '';
 const aboutRest = aboutText.slice(1);
@@ -45,9 +40,14 @@ const aboutRest = aboutText.slice(1);
 
       <section class="hero">
         <div class="hero-text">
-          <p class="dateline">the ledger · {netWorth.asOf ? `updated ${netWorth.asOf}` : 'brooklyn, ny'}</p>
+          <p class="dateline">brooklyn, ny</p>
           <h1>every dollar, <em class="accent">out loud</em>.</h1>
-          {lede && <p class="lede">{lede}</p>}
+          {lede && (
+            <div class="lede-row">
+              <img class="avatar" src={avatar.src} alt={avatar.alt} width="72" height="72" />
+              <p class="lede">{lede}</p>
+            </div>
+          )}
           <div class="actions">
             <a class="btn-solid" href="#money-map">see the money map</a>
             {hasUrl(molzLifeHref) && <a class="text-link" href={molzLifeHref}>peek at my dashboard</a>}
@@ -63,12 +63,13 @@ const aboutRest = aboutText.slice(1);
             ))}
           </ul>
         </div>
-        <div class="hero-card">
+        <div class="hero-card" id="net-worth">
           <NetWorthCard
             client:load
             netWorth={netWorth.current}
             goal={netWorth.goal}
             goalLabel={netWorth.goalLabel}
+            goalDate={netWorth.goalDate}
             monthDelta={netWorth.monthDelta}
             milestones={netWorth.milestones}
             series={netWorth.series}
@@ -78,31 +79,6 @@ const aboutRest = aboutText.slice(1);
       </section>
 
       <Bento />
-
-      <section class="goal reveal" aria-labelledby="goal-title">
-        <div class="goal-head">
-          <h2 id="goal-title">the ledger</h2>
-          <span class="goal-date">{netWorth.goalLabel} · by {netWorth.goalDate}</span>
-        </div>
-        <ul class="ledger">
-          <li><span>net worth right now</span><span class="dots" aria-hidden="true"></span><b class="goal-now" data-count={goal.current}>${goal.current}k</b></li>
-          <li><span>distance to {short(netWorth.goal)}</span><span class="dots" aria-hidden="true"></span><b>${toGo}k to go</b></li>
-          {ledgerRows.map((r) => <li><span>{r.label}</span><span class="dots" aria-hidden="true"></span><b>{r.value}</b></li>)}
-        </ul>
-        <div
-          class="ruler"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax={goal.target}
-          aria-valuenow={goal.current}
-          aria-valuetext={`$${goal.current}k of $${goal.target}k`}
-        >
-          <div class="ruler-fill" style={`width:${pct}%`} data-w={pct}></div>
-        </div>
-        <ol class="ticks" aria-hidden="true">
-          {ticks.map((t) => <li>{t === 0 ? '$0' : `${t}k`}</li>)}
-        </ol>
-      </section>
 
       {startHere.length > 0 && (
         <section id="start" class="split">
@@ -151,7 +127,18 @@ const aboutRest = aboutText.slice(1);
       <section class="topics reveal">
         <h2>what i post about</h2>
         <ul>
-          {topics.map((t, i) => <li><span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t}</li>)}
+          {topics.map((t, i) => (
+            <li>
+              {hasUrl(t.href)
+                ? (
+                  <a class="topic topic-link" href={t.href}>
+                    <span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t.label}
+                    <ArrowUpRight className="t-arrow" aria-hidden="true" />
+                  </a>
+                )
+                : <span class="topic"><span class="t-num">{String(i + 1).padStart(2, '0')}</span>{t.label}</span>}
+            </li>
+          ))}
         </ul>
       </section>
 
@@ -159,46 +146,11 @@ const aboutRest = aboutText.slice(1);
         <span class="seen-label">as seen on</span>
         <span class="seen-name">CNBC</span>
         <span class="seen-name">Acorns</span>
-        <span class="colophon">set in instrument serif, young serif + figtree · brooklyn, ny</span>
       </footer>
     </div>
     <script>
       import { observeReveals } from '../scripts/reveal';
-
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // scroll reveals + cascades + ruler fill on scroll
-      const io = observeReveals((el) => {
-        const fill = el.querySelector<HTMLElement>('.ruler-fill');
-        if (fill?.dataset.w) fill.style.setProperty('width', fill.dataset.w + '%', 'important');
-      });
-      document.querySelectorAll('.ledger').forEach((list) => {
-        Array.from(list.children).forEach((child, i) => {
-          (child as HTMLElement).style.transitionDelay = Math.min(i * 70, 800) + 'ms';
-        });
-        io.observe(list);
-      });
-
-      // goal number counts up when scrolled into view
-      const goalNow = document.querySelector<HTMLElement>('.goal-now');
-      if (goalNow?.dataset.count) {
-        const target = parseInt(goalNow.dataset.count, 10);
-        const cio = new IntersectionObserver((entries) => {
-          if (!entries.some((e) => e.isIntersecting)) return;
-          cio.disconnect();
-          if (reduce) return;
-          const dur = 1200;
-          let t0: number | null = null;
-          const tick = (t: number) => {
-            t0 ??= t;
-            const p = Math.min(1, (t - t0) / dur);
-            goalNow.textContent = '$' + Math.round(target * (1 - Math.pow(1 - p, 3))) + 'k';
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }, { threshold: 0.4 });
-        cio.observe(goalNow);
-      }
+      observeReveals();
     </script>
 </Base>
 
@@ -245,9 +197,11 @@ const aboutRest = aboutText.slice(1);
   .proof { margin: 0; font-size: 14px; color: rgb(var(--ink-soft)); }
   .hero-card { animation: settle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
-  .lede::first-letter {
-    font-family: var(--display); font-size: 54px; float: left;
-    line-height: 0.85; padding: 4px 8px 0 0; color: rgb(var(--ink));
+  .lede-row { display: flex; align-items: flex-start; gap: 16px; }
+  .avatar {
+    width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgb(var(--card)); box-shadow: 0 0 0 1px rgb(var(--line)), 0 1px 2px rgba(28, 25, 23, 0.06);
+    margin-top: 4px;
   }
 
   /* links: a list, not a stack of pills */
@@ -270,31 +224,6 @@ const aboutRest = aboutText.slice(1);
     font-size: 13px; font-weight: 500; color: rgb(var(--ink)); background: rgb(var(--molz-tint));
     border-radius: 999px; padding: 3px 12px; margin-left: 14px; white-space: nowrap;
   }
-
-  /* goal ruler: the one loud element */
-  .goal { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid rgb(var(--ink)); }
-  .goal-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .goal h2 { font-size: 24px; }
-  .goal-date { font-size: 15px; color: rgb(var(--ink-soft)); }
-  /* the ledger */
-  .ledger { margin-top: 4px; }
-  .ledger li { display: flex; align-items: baseline; gap: 10px; padding: 10px 2px; font-size: 16px; }
-  .ledger li + li { border-top: 1px dotted rgb(var(--line)); }
-  .ledger .dots { flex: 1; border-bottom: 1px dotted rgb(var(--ink-soft)); transform: translateY(-4px); }
-  .ledger b { font-weight: 500; color: rgb(var(--ink)); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .goal-now { font-family: var(--display); font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
-  .ruler {
-    position: relative; height: 36px; margin-top: 8px;
-    border: 1.5px solid rgb(var(--ink)); border-radius: 6px; overflow: hidden;
-    background:
-      repeating-linear-gradient(90deg, transparent 0 calc(100% / 6 - 1px), rgb(var(--line)) calc(100% / 6 - 1px) calc(100% / 6));
-  }
-  .ruler-fill {
-    height: 100%;
-    background: linear-gradient(90deg, rgb(var(--molz-tint)), rgb(var(--sand)));
-    border-right: 1.5px solid rgb(var(--ink));
-  }
-  .ticks { display: flex; justify-content: space-between; font-size: 13px; color: rgb(var(--ink-soft)); }
 
   /* about */
   .about { display: flex; flex-direction: column; gap: 24px; }
@@ -327,31 +256,26 @@ const aboutRest = aboutText.slice(1);
   /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
   @keyframes settle { from { opacity: 0; transform: translateY(22px) scale(0.985); } to { opacity: 1; transform: none; } }
-  @keyframes inkwash { from { color: rgb(var(--molz-tint)); } to { color: rgb(var(--ink)); } }
   .mast { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
   .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
   .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
   .hero-text > *:nth-child(n+5) { animation-delay: 0.4s; }
-  .lede::first-letter { animation: inkwash 1.4s ease 0.6s both; }
 
   .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .js .reveal.in { opacity: 1; transform: none; }
 
-  .js .ledger > * { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
-  .js .ledger.in > * { opacity: 1; transform: none; }
 
 
-  .js .ruler-fill { width: 0 !important; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s; }
 
   /* hover micro-interactions */
   a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
   a.link:hover::after { opacity: 1; transform: none; }
-  .topics li { transition: transform 0.25s ease; }
-  .topics li:hover { transform: translateX(6px); }
+  .topic-link { transition: transform 0.25s ease; }
+  .topic-link:hover { transform: translateX(6px); }
   .t-num { transition: color 0.25s ease; }
-  .topics li:hover .t-num { color: rgb(var(--ink)); }
+  .topic-link:hover .t-num { color: rgb(var(--ink)); }
 
   /* peach accents */
   .hl { background: linear-gradient(to top, rgb(var(--molz-tint)) 36%, transparent 36%); }
@@ -366,14 +290,18 @@ const aboutRest = aboutText.slice(1);
   /* topics */
   .topics { display: flex; flex-direction: column; gap: 16px; }
   .topics ul { border-top: 1px solid rgb(var(--line)); }
-  .topics li { display: flex; gap: 16px; align-items: baseline; padding: 14px 4px; border-bottom: 1px solid rgb(var(--line)); font-size: 18px; color: rgb(var(--ink)); }
+  .topics li { border-bottom: 1px solid rgb(var(--line)); }
+  .topic { display: flex; gap: 16px; align-items: baseline; padding: 14px 4px; font-size: 18px; color: rgb(var(--ink)); text-decoration: none; }
+  .topic-link { min-height: 44px; }
+  .topic-link:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .t-arrow { width: 18px; height: 18px; margin-left: auto; align-self: center; color: rgb(var(--molz)); transition: transform 0.25s ease; }
+  .topic-link:hover .t-arrow { transform: translate(2px, -2px); }
   .t-num { font-size: 13px; color: rgb(var(--ink-soft)); font-variant-numeric: tabular-nums; }
 
   /* footer */
   .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid rgb(var(--line)); }
   .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
   .seen-name { font-family: var(--display); font-size: 24px; color: rgb(var(--ink)); }
-  .colophon { width: 100%; font-size: 13px; letter-spacing: 0.06em; color: rgb(var(--ink-soft)); }
 
   @media (min-width: 900px) {
     .page { padding: 32px 48px 64px; gap: 96px; }
@@ -385,15 +313,9 @@ const aboutRest = aboutText.slice(1);
     .hero-text { gap: 20px; padding-bottom: 8px; }
     .hero h1 { font-size: 72px; line-height: 76px; }
     .lede { font-size: 19px; }
+    .avatar { width: 72px; height: 72px; }
     .links { margin-top: 20px; }
 
-    .goal { gap: 12px; padding-top: 32px; }
-    .goal h2 { font-size: 30px; }
-    .goal-date { font-size: 18px; }
-    .goal-now { font-size: 56px; line-height: 0.95; }
-    .ledger li { font-size: 18px; }
-    .ruler { height: 56px; border-radius: 8px; }
-    .ticks { font-size: 14px; }
 
     .about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
     .about h2 { font-size: 56px; }
@@ -414,7 +336,6 @@ const aboutRest = aboutText.slice(1);
 
     .seen { flex-wrap: nowrap; gap: 28px; }
     .seen-label { width: auto; }
-    .colophon { width: auto; margin-left: auto; }
 
     .wordmark { font-size: 26px; }
   }
