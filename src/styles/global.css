@@ -8,10 +8,15 @@
   --ink: 28 25 23; --ink-soft: 87 83 78; --ink-mute: 168 161 150;
   --molz: 200 85 61; --molz-tint: 246 227 221;
   --gain: 63 125 88; --loss: 180 72 58; --hold: 199 154 59; --sky: 79 124 172;
+  /* second accent: the guide to molz's point. safe for small text, never a chart color */
+  --teal: 42 110 104; --teal-tint: 210 232 228;
 
   /* solid buttons: white on #B94A33 clears 4.5:1, the lighter molz doesn't */
   --molz-solid: #B94A33;
   --molz-solid-hover: #A3402B;
+  /* badges and cover blocks only; the solid button stays molz */
+  --teal-solid: #1F6B65;
+  --teal-solid-hover: #185955;
 
   --font-instrument: 'Instrument Serif', Georgia, serif;
   --font-young: 'Young Serif', Georgia, serif;
@@ -29,6 +34,7 @@
     --ink: 245 241 234; --ink-soft: 184 176 163; --ink-mute: 122 116 104;
     --molz: 228 114 90; --molz-tint: 58 33 27;
     --gain: 107 184 138; --loss: 224 120 106; --hold: 224 184 96; --sky: 127 166 209;
+    --teal: 111 194 184; --teal-tint: 31 51 48;
   }
 }
 
@@ -51,6 +57,12 @@
     background: var(--molz-solid);
   }
   .btn-solid:hover { background: var(--molz-solid-hover); }
+  /* the quieter second action next to btn-solid, never on its own */
+  .btn-outline {
+    @apply inline-flex items-center gap-2 rounded-full border-[1.5px] border-teal bg-transparent px-6 py-3 text-base font-semibold text-teal no-underline
+      transition duration-150 hover:-translate-y-0.5 hover:bg-teal-tint motion-reduce:transition-none motion-reduce:hover:translate-y-0
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink;
+  }
   /* spec eyebrow, kept lowercase to match the site's voice */
   .eyebrow { @apply text-xs font-semibold tracking-[0.08em] text-ink-soft; }
 }
