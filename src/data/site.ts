@@ -73,7 +73,7 @@ export const links: LinkItem[] = [
 // what i post about. add an instagram post or highlight link to `href` and that topic
 // becomes clickable with an arrow; leave it '' and it shows as plain text.
 export const topics: { label: string; href: string }[] = [
-  { label: 'net worth updates', href: '' },
+  { label: 'net worth updates', href: 'https://www.instagram.com/p/DcXfqy5jX9e/' },
   { label: '401k and hsa', href: '' },
   { label: 'index funds', href: '' },
   { label: 'budgeting', href: '' },
