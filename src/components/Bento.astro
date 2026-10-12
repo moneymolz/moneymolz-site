@@ -1,12 +1,8 @@
 ---
 import { ArrowRight, LayoutDashboard } from 'lucide-react';
 import { bento, netWorth, mapDestinations } from '../data/site';
-import { hasUrl, short } from '../lib/format';
-
-const nextMilestone = netWorth.milestones.find((m) => netWorth.current < m) ?? null;
-const prevMilestone = [...netWorth.milestones].reverse().find((m) => netWorth.current >= m) ?? 0;
-const nextPct = nextMilestone ? Math.round((netWorth.current / nextMilestone) * 100) : 100;
-
+import { hasUrl } from '../lib/format';
+import { NetWorthCard } from './NetWorthCard';
 
 const life = bento.molzLife;
 const ring = { r: 26, c: 2 * Math.PI * 26 };
@@ -24,13 +20,31 @@ const notSynced = 'text-sm text-ink-soft italic';
 {/* one tile, rendered as a link when it has somewhere to go */}
 <section aria-label="at a glance" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
   {[
-    { key: 'map', href: bento.moneyMap.href, span: 'md:col-span-2 lg:col-span-7 lg:row-span-2' },
+    { key: 'networth', href: '', span: 'md:col-span-2 lg:col-span-7 lg:row-span-2' },
     { key: 'life', href: bento.molzLife.href, span: 'lg:col-span-5' },
-    { key: 'milestones', href: bento.milestones.href, span: 'lg:col-span-5' },
+    { key: 'map', href: bento.moneyMap.href, span: 'lg:col-span-5' },
     { key: 'investing', href: bento.investing.href, span: 'lg:col-span-4' },
     { key: 'travel', href: bento.travel.href, span: 'lg:col-span-4' },
     { key: 'slow', href: bento.slowYears.href, span: 'md:col-span-2 lg:col-span-4' },
   ].map((t) => {
+    // the net worth card leads the grid; it brings its own card styling
+    if (t.key === 'networth') {
+      return (
+        <div id="net-worth" class={t.span}>
+          <NetWorthCard
+            client:load
+            className="h-full justify-center"
+            netWorth={netWorth.current}
+            goal={netWorth.goal}
+            goalLabel={netWorth.goalLabel}
+            goalDate={netWorth.goalDate}
+            monthDelta={netWorth.monthDelta}
+            milestones={netWorth.milestones}
+            series={netWorth.series}
+          />
+        </div>
+      );
+    }
     const linked = hasUrl(t.href);
     const Tag = linked ? 'a' : 'div';
     const tone =
@@ -84,33 +98,6 @@ const notSynced = 'text-sm text-ink-soft italic';
                     stroke-dasharray={ring.c} stroke-dashoffset={ring.c * (1 - Math.min(life.savingsRate, 100) / 100)} />
                 </svg>
               )}
-          </div>
-        )}
-
-        {t.key === 'milestones' && (
-          <div>
-            <p class="eyebrow m-0">milestones</p>
-            {nextMilestone
-              ? <p class="m-0 mt-2 text-base">next up: <span class="font-semibold tabular-nums text-ink">{short(nextMilestone)}</span>, <span class="font-semibold tabular-nums text-ink">{nextPct}%</span> there</p>
-              : <p class="m-0 mt-2 text-base">every milestone reached</p>}
-            <ol class="m-0 mt-4 flex list-none items-center gap-2 p-0" aria-label="milestones">
-              {netWorth.milestones.map((m, i) => {
-                const reached = netWorth.current >= m;
-                const isNext = m === nextMilestone;
-                const partial = isNext ? Math.round(((netWorth.current - prevMilestone) / (m - prevMilestone)) * 100) : 0;
-                return (
-                  <li class="flex flex-1 items-center gap-2">
-                    <span class="relative h-2 flex-1 overflow-hidden rounded-full bg-sand" aria-hidden="true">
-                      <span class="absolute inset-y-0 left-0 rounded-full bg-molz" style={`width:${reached ? 100 : partial}%`}></span>
-                    </span>
-                    <span class:list={['text-xs tabular-nums', reached || isNext ? 'font-semibold text-ink' : 'text-ink-soft']}>
-                      {short(m)}<span class="sr-only">{reached ? ' reached' : isNext ? ' next' : ''}</span>
-                    </span>
-                    {i < netWorth.milestones.length - 1 && <span class="sr-only">,</span>}
-                  </li>
-                );
-              })}
-            </ol>
           </div>
         )}
 

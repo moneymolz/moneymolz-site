@@ -37,7 +37,6 @@ export const bento = {
     savingsLabel: 'saved before taxes',
     savingsNote: 'retirement + hsa, as a share of gross pay',
   },
-  milestones: { href: '#net-worth' },
   investing: {
     href: '#',
     // biggest holdings first, as % of everything invested. percentages only, no dollar amounts.
@@ -79,8 +78,12 @@ export const topics: { label: string; href: string }[] = [
   { label: 'solo travel', href: '' },
 ];
 
-// small photo next to the hero intro
-export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol on a balcony in Dubrovnik at sunset' };
+// the big photo on the right of the hero
+export const heroPhoto = {
+  src: '/anmol.jpg',
+  alt: 'Anmol on a balcony in Dubrovnik at sunset',
+  caption: 'dubrovnik, july 2026.',
+};
 export const instagram = 'https://instagram.com/moneymolz';
 
 // about me. anything in [BRACKETS] is hidden until you replace it,

@@ -11,9 +11,10 @@ type Props = {
   monthDelta: number | null; // change this month, in dollars. null hides the chip
   milestones: number[]; // e.g. [100000, 200000, 300000]
   series: number[]; // last 12 month-end values for the sparkline
+  className?: string;
 };
 
-export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, milestones, series }: Props) {
+export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, milestones, series, className = '' }: Props) {
   const { ref, seen } = useInView<HTMLElement>();
   const shown = useCountUp(netWorth, seen);
   const pct = Math.min(netWorth / goal, 1) * 100;
@@ -29,7 +30,7 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
     <section
       ref={ref}
       aria-label="net worth tracker"
-      className="rounded-2xl border border-line bg-card p-6 shadow-[0_1px_2px_rgba(28,25,23,.04)] transition duration-150 hover:-translate-y-0.5 hover:border-ink-mute motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-8"
+      className={`flex flex-col rounded-2xl border border-line bg-card p-6 shadow-[0_1px_2px_rgba(28,25,23,.04)] transition duration-150 hover:-translate-y-0.5 hover:border-ink-mute motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-8 ${className}`}
     >
       <p className="eyebrow m-0">net worth</p>
 
@@ -58,7 +59,7 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
       )}
 
       {/* goal rail */}
-      <div className="mt-8">
+      <div className="mt-8 sm:mt-10">
         <div className="mb-1 flex items-center justify-between text-sm">
           <span className="inline-flex items-center gap-1.5 font-semibold text-ink">
             <Target className="h-4 w-4 text-molz" aria-hidden="true" /> {goalLabel}
