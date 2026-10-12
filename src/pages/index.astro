@@ -3,6 +3,7 @@ import Analytics from '@vercel/analytics/astro';
 
 // ===== EDIT THESE =====
 const links = [
+  { label: 'build your dashboard with me', href: '/work-with-me', badge: 'new' },
   { label: 'latest net worth update', href: '#', primary: true },
   { label: 'join the newsletter', href: '#' },
   { label: 'molz life: a peek at my dashboard', href: '#' },
@@ -143,7 +144,7 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
             {shownLinks.map((l) => (
               <li>
                 {hasUrl(l.href)
-                  ? <a class:list={['link', { primary: l.primary }]} href={l.href}>{l.label}</a>
+                  ? <a class:list={['link', { primary: l.primary }]} href={l.href}>{l.label}{l.badge && <span class="new-note">{l.badge}</span>}</a>
                   : <span class="link soon">{l.label}<span class="soon-note">coming soon</span></span>}
               </li>
             ))}
@@ -421,6 +422,10 @@ const buildDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 
   .link.primary:focus-visible { outline-offset: 2px; }
   .link.soon { justify-content: space-between; gap: 16px; color: var(--muted); }
   .soon-note { font-size: 14px; font-weight: 400; color: var(--kicker); white-space: nowrap; }
+  .new-note {
+    font-size: 13px; font-weight: 500; color: var(--ink); background: var(--peach);
+    border-radius: 999px; padding: 3px 12px; margin-left: 14px; white-space: nowrap;
+  }
 
   /* goal ruler: the one loud element */
   .goal { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--ink); }
