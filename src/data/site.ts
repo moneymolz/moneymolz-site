@@ -81,7 +81,7 @@ export const topics: { label: string; href: string }[] = [
 ];
 
 // small round photo next to the hero intro
-export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol smiling on a balcony in Dubrovnik' };
+export const avatar = { src: '/anmol-avatar.jpg', alt: 'Anmol on a balcony in Dubrovnik at sunset' };
 export const instagram = 'https://instagram.com/moneymolz';
 
 // about me. anything in [BRACKETS] is hidden until you replace it,
