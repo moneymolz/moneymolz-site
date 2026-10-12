@@ -49,9 +49,10 @@ export const bento = {
   },
   travel: {
     href: '#',
-    photo: '/anmol.jpg',
-    alt: 'Anmol on a balcony in Dubrovnik at sunset',
-    latest: 'dubrovnik, july 2026',
+    photo: '/japan.jpg',
+    photoPosition: '50% 60%', // which part of the photo stays in frame when the tile crops it
+    alt: 'Anmol smiling over her shoulder on a Kyoto street, with a pagoda behind her',
+    latest: 'kyoto, japan',
     next: null as string | null, // where next, e.g. 'lisbon in march'. null hides the line
   },
   slowYears: {
