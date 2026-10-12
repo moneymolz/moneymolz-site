@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* design tokens. rgb triplets so tailwind opacity modifiers work: bg-gain/10 */
+:root {
+  --paper: 250 247 242; --card: 255 255 255; --sand: 241 235 224; --line: 231 223 209;
+  --ink: 28 25 23; --ink-soft: 87 83 78; --ink-mute: 168 161 150;
+  --molz: 200 85 61; --molz-tint: 246 227 221;
+  --gain: 63 125 88; --loss: 180 72 58; --hold: 199 154 59; --sky: 79 124 172;
+
+  /* solid buttons: white on #B94A33 clears 4.5:1, the lighter molz doesn't */
+  --molz-solid: #B94A33;
+  --molz-solid-hover: #A3402B;
+
+  --font-instrument: 'Instrument Serif', Georgia, serif;
+  --font-young: 'Young Serif', Georgia, serif;
+  --font-figtree: 'Figtree', system-ui, sans-serif;
+
+  /* names the hand-written page css already uses */
+  --display: var(--font-young);
+  --sans: var(--font-figtree);
+
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: 20 18 15; --card: 29 26 22; --sand: 38 34 28; --line: 51 46 38;
+    --ink: 245 241 234; --ink-soft: 184 176 163; --ink-mute: 122 116 104;
+    --molz: 228 114 90; --molz-tint: 58 33 27;
+    --gain: 107 184 138; --loss: 224 120 106; --hold: 224 184 96; --sky: 127 166 209;
+  }
+}
+
+@layer base {
+  body { @apply bg-paper font-sans text-ink-soft antialiased; }
+}
+
+/* the one solid button style, shared by pages and islands */
+@layer components {
+  .btn-solid {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white no-underline
+      transition duration-150 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-molz;
+    background: var(--molz-solid);
+  }
+  .btn-solid:hover { background: var(--molz-solid-hover); }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.08em] text-ink-soft; }
+}
