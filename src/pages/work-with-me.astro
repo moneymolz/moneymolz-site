@@ -146,6 +146,44 @@ const steps = [
             </div>
             <span class="mock-arrow">↗</span>
           </div>
+          <div class="mock-card mock-wide mock-sankey-card">
+            <div class="mock-label">cash flow · sample month</div>
+            <div class="sankey-num">$5,850 in</div>
+            <div class="mock-sub">take-home split between net spending and savings.</div>
+            <svg viewBox="0 0 600 260" class="sankey-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M32,10 C220,10 380,10 568,10 L568,190 C380,190 220,190 32,190 Z" fill="#a5a0e8"/>
+              <path d="M32,190 C220,190 380,192 568,192 L568,208 C380,208 220,206 32,206 Z" fill="#b8a9d9"/>
+              <path d="M32,206 C220,206 380,210 568,210 L568,224 C380,224 220,220 32,220 Z" fill="#d9a06c"/>
+              <path d="M32,220 C220,220 380,224 568,224 L568,236 C380,236 220,232 32,232 Z" fill="#7ba889"/>
+              <path d="M32,232 C220,232 380,236 568,236 L568,246 C380,246 220,242 32,242 Z" fill="#c98aa5"/>
+              <path d="M32,242 C220,242 380,244 568,244 L568,248 C380,248 220,246 32,246 Z" fill="#c9a84c"/>
+              <path d="M32,246 C220,246 380,248 568,248 L568,252 C380,252 220,250 32,250 Z" fill="#9aa0b0"/>
+              <rect x="18" y="10" width="14" height="240" rx="7" fill="#6c63ff"/>
+              <rect x="568" y="10" width="14" height="240" rx="7" fill="#6c63ff"/>
+              <circle cx="591" cy="100" r="6" fill="#a5a0e8"/>
+              <circle cx="591" cy="200" r="6" fill="#b8a9d9"/>
+              <circle cx="591" cy="217" r="6" fill="#d9a06c"/>
+              <circle cx="591" cy="230" r="6" fill="#7ba889"/>
+              <circle cx="591" cy="241" r="6" fill="#c98aa5"/>
+              <circle cx="591" cy="246" r="6" fill="#c9a84c"/>
+              <circle cx="591" cy="251" r="6" fill="#9aa0b0"/>
+            </svg>
+            <div class="chip-row">
+              <div class="chip"><span>take-home</span><b>$5,850</b></div>
+              <div class="chip"><span>net spend</span><b>$1,470</b></div>
+              <div class="chip"><span>savings</span><b>$4,380</b></div>
+              <div class="chip"><span>savings rate</span><b class="green">74.9%</b></div>
+            </div>
+            <div class="cat-rows">
+              <div class="cat-row"><span><i class="cdot" style="background:#b8a9d9"></i>nomz</span><b>$385.20</b></div>
+              <div class="cat-row"><span><i class="cdot" style="background:#d9a06c"></i>living</span><b>$342.10</b></div>
+              <div class="cat-row"><span><i class="cdot" style="background:#7ba889"></i>hobbies</span><b>$298.45</b></div>
+              <div class="cat-row"><span><i class="cdot" style="background:#c98aa5"></i>house</span><b>$244.80</b></div>
+              <div class="cat-row"><span><i class="cdot" style="background:#c9a84c"></i>transportation</span><b>$96.30</b></div>
+              <div class="cat-row"><span><i class="cdot" style="background:#9aa0b0"></i>other</span><b>$103.15</b></div>
+            </div>
+            <span class="mock-arrow">↗</span>
+          </div>
           <p class="mock-cap">sample data from a demo dashboard.</p>
         </div>
       </section>
@@ -321,6 +359,20 @@ const steps = [
   .tm-big { grid-row: span 2; }
   .tm-big b { font-size: 20px; }
   .tm-nest { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
+  /* sankey mockup */
+  .mock-sankey-card { background: #fff; border: 1px solid var(--divider); }
+  .sankey-num { font-family: var(--display); font-size: 38px; color: #23233a; letter-spacing: -0.01em; margin-top: 6px; }
+  .sankey-svg { width: 100%; height: auto; margin: 12px 0 4px; }
+  .chip-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+  .chip { background: #f4f2fa; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .chip span { font-size: 11px; letter-spacing: 0.08em; color: #5b5b7a; }
+  .chip b { font-size: 16px; color: #23233a; font-weight: 600; }
+  .chip b.green { color: #2e7d5b; }
+  .cat-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin-top: 10px; }
+  .cat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 14px; border-bottom: 1px solid #f0edf7; color: #23233a; }
+  .cat-row b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+  @media (max-width: 560px) { .chip-row { grid-template-columns: 1fr 1fr; } .cat-rows { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .molz-mock { grid-template-columns: 1fr 1fr; } }
 
   .cta { display: flex; }
