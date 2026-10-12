@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowUpRight, Target } from 'lucide-react';
 import { useCountUp, useInView } from './hooks';
 import { short, usd } from '../lib/format';
+import { Sparkline } from './Sparkline';
 
 type Props = {
   netWorth: number;
@@ -11,23 +12,6 @@ type Props = {
   series: number[]; // last 12 month-end values for the sparkline
   asOf: string | null; // e.g. 'oct 11'
 };
-
-function Sparkline({ data }: { data: number[] }) {
-  if (data.length < 2) return null;
-  const w = 80, h = 24;
-  const min = Math.min(...data), max = Math.max(...data);
-  const pts = data.map((v, i) => [
-    (i / (data.length - 1)) * w,
-    h - 2 - ((v - min) / (max - min || 1)) * (h - 4),
-  ]);
-  const last = pts[pts.length - 1];
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true" className="overflow-visible">
-      <polyline points={pts.map((p) => p.join(',')).join(' ')} fill="none" stroke="currentColor" strokeWidth="1.5" className="text-ink-mute" />
-      <circle cx={last[0]} cy={last[1]} r="2.5" className="fill-molz" />
-    </svg>
-  );
-}
 
 export function NetWorthCard({ netWorth, goal, goalLabel, monthDelta, milestones, series, asOf }: Props) {
   const { ref, seen } = useInView<HTMLElement>();
