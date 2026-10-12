@@ -1,0 +1,249 @@
+---
+import Analytics from '@vercel/analytics/astro';
+
+// ===== EDIT THESE =====
+const cal = 'https://cal.com/moneymolz/personal-finance-dashboard';
+const price = 75;
+const minutes = 60;
+const instagram = 'https://instagram.com/moneymolz';
+
+const agenda = [
+  { title: 'your money picture', note: 'where you are now, and the one goal that matters most.' },
+  { title: 'the system', note: 'how i automate everything: 401k before the paycheck, SGOV buckets, net spend tracking.' },
+  { title: 'dashboard walkthrough', note: 'a live tour of my setup: net worth, spend, and the math behind financial independence.' },
+  { title: 'your version', note: 'we map your dashboard to your accounts and goals, with your real numbers.' },
+];
+
+const steps = [
+  { title: '1. book and pay', note: `$${price} through the booking link. prefer paypal? just ask.` },
+  { title: '2. fill the prep form', note: 'ranges are fine. never share logins or account numbers.' },
+  { title: '3. meet for 60 minutes', note: 'we build your version live. you leave with a blueprint.' },
+];
+// ======================
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>work with me · moneymolz</title>
+    <meta name="description" content="a 60-minute 1:1 session to build your personal finance dashboard with anmol." />
+    <meta property="og:title" content="work with me · moneymolz" />
+    <meta property="og:description" content="a 60-minute 1:1 session to build your personal finance dashboard with anmol." />
+    <script>document.documentElement.classList.add('js');</script>
+    <meta name="theme-color" content="#F6F1EE" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <Analytics />
+  </head>
+  <body>
+    <div class="page">
+      <header class="mast">
+        <div class="rule thick"></div>
+        <div class="mast-row">
+          <span class="mast-meta">est. 2021</span>
+          <a class="wordmark" href="/">moneymolz</a>
+          <nav>
+            <a href="/">home</a>
+            <a href={instagram}>instagram</a>
+          </nav>
+        </div>
+        <div class="rule"></div>
+      </header>
+
+      <section class="hero">
+        <div class="hero-text">
+          <p class="dateline">1:1 sessions</p>
+          <h1>build your <span class="hl">dashboard</span> with me.</h1>
+          <p class="lede">a {minutes}-minute working session where we build your personal finance dashboard together, using your real numbers.</p>
+          <p class="price"><b>${price}</b> · {minutes} minutes</p>
+          <a class="link primary book" href={cal}>book your session</a>
+        </div>
+      </section>
+
+      <section class="split reveal">
+        <div class="split-head">
+          <h2>what you get</h2>
+          <p>one hour, your numbers, no generic advice.</p>
+        </div>
+        <ul class="rows">
+          {agenda.map((a) => (
+            <li>
+              <div class="row">
+                <span class="row-title">{a.title}</span>
+                <span class="row-note">{a.note}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="split reveal">
+        <div class="split-head">
+          <h2>how it works</h2>
+        </div>
+        <ul class="rows">
+          {steps.map((s) => (
+            <li>
+              <div class="row">
+                <span class="row-title">{s.title}</span>
+                <span class="row-note">{s.note}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="split reveal">
+        <div class="split-head">
+          <h2>the honest bit</h2>
+        </div>
+        <div class="about-text">
+          <p>this isn't licensed financial advice. it's me showing you the exact system i use, rebuilt around your numbers. everything you share stays between us.</p>
+        </div>
+      </section>
+
+      <section class="reveal cta">
+        <a class="link primary" href={cal}>book your session · ${price}</a>
+      </section>
+
+      <footer class="seen reveal">
+        <span class="seen-label">as seen on</span>
+        <span class="seen-name">CNBC</span>
+        <span class="seen-name">Acorns</span>
+        <span class="colophon">set in young serif + figtree · brooklyn, ny</span>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --cream: #F6F1EE;
+    --ink: #141414;
+    --body: #3A372F;
+    --muted: #6B6455;
+    --divider: #E3DCCD;
+    --kicker: #8A8172;
+    --peach: #F2DBBC;
+    --mint: #CFE3E1;
+    --display: 'Young Serif', Georgia, serif;
+    --sans: 'Figtree', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--body);
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--ink); }
+  a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+  h1, h2 { font-family: var(--display); font-weight: 400; color: var(--ink); margin: 0; }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  .page { max-width: 1160px; margin: 0 auto; padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 56px; }
+
+  .mast { display: flex; flex-direction: column; animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .rule { height: 1px; background: var(--ink); }
+  .rule.thick { height: 4px; }
+  .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 2px; }
+  .mast-meta { font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
+  .wordmark { font-family: var(--display); font-size: 22px; color: var(--ink); text-decoration: none; }
+  .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
+  .mast nav a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
+  .mast nav a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--peach); text-decoration-thickness: 2px; }
+
+  .hero { display: flex; flex-direction: column; gap: 28px; }
+  .dateline { margin: 0; font-size: 12px; letter-spacing: 0.22em; color: var(--kicker); }
+  .hero-text { display: flex; flex-direction: column; gap: 16px; }
+  .hero-text > * { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-text > *:nth-child(2) { animation-delay: 0.1s; }
+  .hero-text > *:nth-child(3) { animation-delay: 0.2s; }
+  .hero-text > *:nth-child(4) { animation-delay: 0.3s; }
+  .hero-text > *:nth-child(5) { animation-delay: 0.4s; }
+  .hero h1 { font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; }
+  .hl { background: linear-gradient(to top, var(--peach) 36%, transparent 36%); }
+  .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
+  .price { margin: 4px 0 0; font-size: 18px; color: var(--muted); }
+  .price b { font-family: var(--display); font-size: 34px; font-weight: 400; color: var(--ink); margin-right: 6px; }
+
+  .link {
+    display: flex; align-items: center; min-height: 60px; padding: 0 4px;
+    text-decoration: none; font-size: 18px; font-weight: 500;
+  }
+  .link.primary {
+    background: var(--peach); color: var(--ink); border-radius: 10px;
+    padding: 0 20px; margin: 10px 0;
+  }
+  .link.primary:hover { background: color-mix(in srgb, var(--peach), #000 8%); }
+  a.link::after { content: "\2192"; margin-left: auto; padding-left: 16px; opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+  a.link:hover::after { opacity: 1; transform: none; }
+  .hero .link.primary { align-self: flex-start; }
+
+  .split { display: flex; flex-direction: column; gap: 20px; }
+  .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .split-head { display: flex; flex-direction: column; gap: 12px; }
+  .split-head p { margin: 0; max-width: 36ch; color: var(--muted); }
+  .rows { border-top: 1px solid var(--divider); }
+  .rows li { border-bottom: 1px solid var(--divider); }
+  .row { display: flex; flex-direction: column; gap: 2px; padding: 14px 4px; }
+  .row-title { font-size: 18px; font-weight: 500; color: var(--ink); }
+  .row-note { font-size: 15px; color: var(--muted); }
+  .about-text { display: flex; flex-direction: column; gap: 16px; }
+  .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
+
+  .cta { display: flex; }
+  .cta .link.primary { flex: 1; justify-content: center; }
+  .cta a.link::after { display: none; }
+
+  .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--divider); }
+  .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: var(--kicker); }
+  .seen-name { font-family: var(--display); font-size: 24px; color: var(--ink); }
+  .colophon { width: 100%; font-size: 13px; letter-spacing: 0.06em; color: var(--kicker); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  @media (min-width: 900px) {
+    .page { padding: 32px 48px 64px; gap: 96px; }
+    .hero h1 { font-size: 80px; line-height: 0.98; }
+    .lede { font-size: 19px; }
+    .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
+    .split h2 { font-size: 56px; }
+    .split-head p { font-size: 18px; }
+    .seen { flex-wrap: nowrap; gap: 28px; }
+    .seen-label { width: auto; }
+    .colophon { width: auto; margin-left: auto; }
+    .wordmark { font-size: 26px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    .js .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
