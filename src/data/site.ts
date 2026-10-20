@@ -44,7 +44,7 @@ export const bento = {
     href: molzLifeHref,
     // pre-tax savings rate: retirement + hsa contributions as a share of gross pay.
     // doesn't count anything saved from take-home. null hides the ring.
-    savingsRate: 28.7 as number | null,
+    savingsRate: 28.9 as number | null,
     savingsLabel: 'saved before taxes',
     savingsNote: 'retirement + hsa, as a share of gross pay',
   },
