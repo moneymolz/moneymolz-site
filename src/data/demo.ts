@@ -50,3 +50,42 @@ export const demoData: MolzData = {
     { id: 'fun', label: 'fun money', icon: 'sparkles', balance: 320, target: 400, topUp: 200, lastSpent: 'concert tickets' },
   ],
 };
+
+// SAMPLE DATA for the four-card peek on /work-with-me (DashboardPeek). not anmol's real numbers.
+// goal figures match the 180k sample goal above.
+import type { PeekData } from '../components/DashboardPeek';
+
+export const peekData: PeekData = {
+  isSample: true,
+  today: {
+    bills: [
+      { name: 'renters insurance', amount: 14, due: 'fri' },
+      { name: 'phone', amount: 45, due: 'sat' },
+      { name: 'gym', amount: 89, due: 'mon' },
+    ],
+  },
+  week: {
+    cats: [
+      { label: 'nomz', week: 92, typical: 110 },
+      { label: 'living', week: 64, typical: 80 },
+      { label: 'hobbies', week: 118, typical: 75 },
+      { label: 'transportation', week: 21, typical: 24 },
+    ],
+    daysLeft: 3,
+  },
+  month: {
+    label: 'october',
+    contributions: 2410,
+    market: 770,
+    needs: 905,
+    wants: 565,
+  },
+  goal: {
+    label: '180k goal',
+    current: 148200,
+    target: 180000,
+    due: 'dec 2027',
+    monthsLeft: 14,
+    addedPerMonth: 2540,
+  },
+};

@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import {
   ArrowRight, CalendarCheck, ClipboardList, Clock, LayoutDashboard, PenLine, Repeat, ShieldCheck, Target, Video,
 } from 'lucide-react';
-import { MolzLifeWidget } from '../components/MolzLifeWidget';
-import { demoData } from '../data/demo';
+import { DashboardPeek } from '../components/DashboardPeek';
+import { peekData } from '../data/demo';
 import { molzLifeHref, siteUpdated } from '../data/site';
 import { hasUrl } from '../lib/format';
 
@@ -91,7 +91,7 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
           <h2 id="sample-title">what you'll walk away with</h2>
           <p>a dashboard like this, built around your numbers.</p>
         </div>
-        <MolzLifeWidget client:visible data={demoData} />
+        <DashboardPeek client:visible data={peekData} />
         <p class="m-0 text-sm italic text-ink-soft">sample data from a demo dashboard.</p>
       </section>
 
