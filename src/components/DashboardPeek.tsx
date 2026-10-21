@@ -103,7 +103,7 @@ export function DashboardPeek({ data, ctaHref }: { data: PeekData; ctaHref?: str
           {data.isSample && (
             <span className="mb-2 inline-block rounded-full bg-molz-tint px-3 py-1 text-xs font-semibold text-molz">sample data</span>
           )}
-          <h2 className="m-0 font-serif text-3xl font-normal text-ink">peek at my dashboard</h2>
+          <h2 className="m-0 font-serif text-[40px] font-normal leading-none text-ink">peek at my dashboard</h2>
           <p className="m-0 mt-2 text-sm text-ink-soft">one dashboard, four check-ins. each one answers a different question.</p>
         </div>
         <button

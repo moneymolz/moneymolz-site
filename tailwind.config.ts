@@ -18,7 +18,7 @@ export default {
       },
       fontFamily: {
         display: ['var(--font-instrument)', 'serif'],
-        serif: ['var(--font-young)', 'serif'],
+        serif: ['var(--font-instrument)', 'serif'],
         sans: ['var(--font-figtree)', 'system-ui', 'sans-serif'],
       },
       maxWidth: { content: '1120px' },

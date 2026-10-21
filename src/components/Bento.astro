@@ -57,7 +57,7 @@ const notSynced = 'text-sm text-ink-soft italic';
           <>
             <div>
               <p class="eyebrow m-0">the money map</p>
-              <h3 class="m-0 mt-2 font-serif text-[28px] font-normal leading-[34px] text-ink">where every paycheck goes</h3>
+              <h3 class="m-0 mt-2 font-serif text-[34px] font-normal leading-[38px] tracking-[-0.01em] text-ink">where every paycheck goes</h3>
               <p class="m-0 mt-2 text-base">paycheck in, <span class="font-semibold tabular-nums text-ink">{mapDestinations}</span> destinations</p>
             </div>
             <svg viewBox="0 0 320 120" class="mini-flow h-auto w-full max-w-[360px] self-center text-line" aria-hidden="true">
@@ -80,7 +80,7 @@ const notSynced = 'text-sm text-ink-soft italic';
             <div class="my-auto flex items-center justify-between gap-6 pt-4">
               <div>
                 {life.savingsRate === null
-                  ? <p class="m-0 font-serif text-2xl leading-tight text-ink">a peek at my dashboard</p>
+                  ? <p class="m-0 font-serif text-3xl leading-tight text-ink">a peek at my dashboard</p>
                   : (
                     <>
                       <p class="m-0 text-sm">{life.savingsLabel}</p>
@@ -133,7 +133,7 @@ const notSynced = 'text-sm text-ink-soft italic';
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" aria-hidden="true"></div>
             <div class="relative mt-auto p-6 text-white">
               <p class="m-0 text-xs font-semibold tracking-[0.08em] text-white/85">solo travel</p>
-              <p class="m-0 mt-1 font-serif text-2xl leading-tight">{bento.travel.latest}</p>
+              <p class="m-0 mt-1 font-serif text-[34px] leading-tight">{bento.travel.latest}</p>
               {bento.travel.next && <p class="m-0 mt-1 text-sm text-white/85">where next: {bento.travel.next}</p>}
             </div>
           </>
@@ -143,7 +143,7 @@ const notSynced = 'text-sm text-ink-soft italic';
           <div>
             <p class="eyebrow m-0">slow years</p>
             {bento.slowYears.note
-              ? <p class="m-0 mt-3 font-serif text-xl leading-snug text-ink">{bento.slowYears.note}</p>
+              ? <p class="m-0 mt-3 font-serif text-[28px] leading-[1.15] text-ink">{bento.slowYears.note}</p>
               : <p class:list={['m-0 mt-3', notSynced]}>not synced yet</p>}
           </div>
         )}

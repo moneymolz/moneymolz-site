@@ -48,7 +48,7 @@ function Detail({ stage, onClose }: { stage: MapStage; onClose: () => void }) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="eyebrow m-0">{stage.eyebrow}</p>
-          <h3 id="mm-detail-title" className="m-0 mt-1 font-serif text-[28px] font-normal leading-[34px] text-ink">{stage.title}</h3>
+          <h3 id="mm-detail-title" className="m-0 mt-1 font-serif text-[34px] font-normal leading-[38px] text-ink">{stage.title}</h3>
           <p className="m-0 mt-1 text-sm text-ink-soft">{stage.headline}</p>
         </div>
         <button
@@ -275,7 +275,7 @@ export function MoneyMap({ stages, edges }: Props) {
                     <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-serif text-[15px] leading-tight lg:text-lg">{s.title}</span>
+                    <span className="block font-serif text-[18px] leading-tight lg:text-[22px]">{s.title}</span>
                     <span className={`mt-0.5 line-clamp-2 block text-xs leading-snug lg:mt-1 lg:text-sm ${isHub ? 'text-white/85' : 'text-ink-soft'}`}>
                       {s.headline}
                     </span>
@@ -331,7 +331,7 @@ export function MoneyMap({ stages, edges }: Props) {
                 >
                   <span>
                     <span className="eyebrow block">{s.eyebrow}</span>
-                    <span className="mt-1 block font-serif text-2xl text-ink">{s.title}</span>
+                    <span className="mt-1 block font-serif text-[30px] leading-tight text-ink">{s.title}</span>
                     <span className="mt-1 block text-sm text-ink-soft">{s.headline}</span>
                   </span>
                   <ChevronDown

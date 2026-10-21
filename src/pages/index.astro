@@ -167,7 +167,7 @@ const aboutRest = aboutText.slice(1);
     .mast-row { flex-wrap: wrap; row-gap: 0; }
     .mast-meta { order: 3; flex-basis: 100%; padding-bottom: 4px; }
   }
-  .wordmark { font-family: var(--display); font-size: 22px; color: rgb(var(--ink)); }
+  .wordmark { font-family: var(--display); font-size: 26px; color: rgb(var(--ink)); }
   .mast nav { display: flex; gap: 20px; font-size: 15px; font-weight: 500; }
   .mast a { text-decoration: none; min-height: 44px; display: flex; align-items: center; }
   .mast a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -183,7 +183,7 @@ const aboutRest = aboutText.slice(1);
   .text-link:hover { text-decoration: underline; }
   .lede { margin: 0; max-width: 38ch; line-height: 1.65; }
   .lede::first-letter {
-    font-family: var(--display); font-size: 54px; float: left;
+    font-family: var(--display); font-size: 64px; float: left;
     line-height: 0.85; padding: 4px 8px 0 0; color: rgb(var(--ink));
   }
   .hero-fig {
@@ -219,7 +219,7 @@ const aboutRest = aboutText.slice(1);
 
   /* about */
   .about { display: flex; flex-direction: column; gap: 24px; }
-  .about h2, .topics h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .about h2, .topics h2 { font-size: 42px; line-height: 1; letter-spacing: -0.02em; }
   .about-text { display: flex; flex-direction: column; gap: 16px; }
   .about-text p { margin: 0; max-width: 60ch; line-height: 1.65; }
   .about-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -228,7 +228,7 @@ const aboutRest = aboutText.slice(1);
 
   /* start here: heading beside divided rows */
   .split { display: flex; flex-direction: column; gap: 20px; }
-  .split h2 { font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .split h2 { font-size: 42px; line-height: 1; letter-spacing: -0.02em; }
   .split-head { display: flex; flex-direction: column; gap: 12px; }
   .split-head p { margin: 0; max-width: 36ch; color: rgb(var(--ink-soft)); }
   .rows { border-top: 1px solid rgb(var(--line)); }
@@ -243,7 +243,7 @@ const aboutRest = aboutText.slice(1);
 
   /* money map */
   .mapwrap { display: flex; flex-direction: column; gap: 12px; }
-  .mapwrap h2 { margin: 0; font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+  .mapwrap h2 { margin: 0; font-size: 42px; line-height: 1; letter-spacing: -0.02em; }
 
   /* motion: entrance, scroll reveals, cascades */
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
@@ -294,7 +294,7 @@ const aboutRest = aboutText.slice(1);
   /* footer */
   .seen { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; padding-top: 24px; border-top: 1px solid rgb(var(--line)); }
   .seen-label { width: 100%; font-size: 15px; font-weight: 400; letter-spacing: 0.14em; color: rgb(var(--ink-soft)); }
-  .seen-name { font-family: var(--display); font-size: 24px; color: rgb(var(--ink)); }
+  .seen-name { font-family: var(--display); font-size: 28px; color: rgb(var(--ink)); }
 
   @media (min-width: 900px) {
     .page { padding: 32px 48px 64px; gap: 96px; }
@@ -310,7 +310,7 @@ const aboutRest = aboutText.slice(1);
     .links { margin-top: 20px; }
 
     .about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
-    .about h2 { font-size: 56px; }
+    .about h2 { font-size: 68px; }
     .about-text { gap: 20px; }
     .about-text p { font-size: 18px; }
     .about-photos { gap: 14px; }
@@ -318,18 +318,18 @@ const aboutRest = aboutText.slice(1);
     .about-photos img.wide { height: 220px; }
 
     .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
-    .split h2 { font-size: 56px; }
+    .split h2 { font-size: 68px; }
     .split-head p { font-size: 18px; }
 
-    .mapwrap h2 { font-size: 56px; }
+    .mapwrap h2 { font-size: 68px; }
 
     .topics { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 72px; align-items: start; }
-    .topics h2 { font-size: 40px; }
+    .topics h2 { font-size: 68px; }
 
     .seen { flex-wrap: nowrap; gap: 28px; }
     .seen-label { width: auto; }
 
-    .wordmark { font-size: 26px; }
+    .wordmark { font-size: 30px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
