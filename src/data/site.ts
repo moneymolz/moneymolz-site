@@ -161,9 +161,8 @@ export const stages: MapStage[] = [
   },
   {
     id: 'brokerage', col: 3, eyebrow: 'held', title: 'fidelity brokerage',
-    headline: 'emergency fund + wedding bucket, in SGOV',
-    note: 'held in SGOV so the cash keeps working while it waits.',
-    details: [{ label: 'emergency fund', value: 'SGOV' }, { label: 'wedding bucket', value: 'SGOV' }],
+    headline: 'emergency fund + wedding bucket',
+    details: [{ label: 'emergency fund', value: 'bucket' }, { label: 'wedding bucket', value: 'bucket' }],
   },
   {
     id: 'investing', col: 3, eyebrow: 'growing', title: 'investing',
