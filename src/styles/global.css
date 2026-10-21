@@ -19,11 +19,10 @@
   --teal-solid-hover: #185955;
 
   --font-instrument: 'Instrument Serif', Georgia, serif;
-  --font-young: 'Young Serif', Georgia, serif;
   --font-figtree: 'Figtree', system-ui, sans-serif;
 
   /* names the hand-written page css already uses */
-  --display: var(--font-young);
+  --display: var(--font-instrument);
   --sans: var(--font-figtree);
 
   color-scheme: light dark;

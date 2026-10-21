@@ -189,7 +189,7 @@ export function MolzLifeWidget({ data, ctaHref }: { data: MolzData; ctaHref?: st
           {data.isSample && (
             <span className="mb-2 inline-block rounded-full bg-molz-tint px-3 py-1 text-xs font-semibold text-molz">sample data</span>
           )}
-          <h2 className="m-0 font-serif text-3xl font-normal text-ink">peek at my dashboard</h2>
+          <h2 className="m-0 font-serif text-[40px] font-normal leading-none text-ink">peek at my dashboard</h2>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {data.periods.length > 1 && (
