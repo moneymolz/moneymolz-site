@@ -14,6 +14,16 @@ const price = 75;
 const minutes = 60;
 const instagram = 'https://instagram.com/moneymolz';
 
+// cal.com pop-up: these attributes make a book button open the booking dialog on this page.
+// the plain href stays as the fallback if cal's script hasn't loaded.
+const calLink = 'moneymolz/personal-finance-dashboard';
+const calNamespace = 'personal-finance-dashboard';
+const calAttrs = {
+  'data-cal-link': calLink,
+  'data-cal-namespace': calNamespace,
+  'data-cal-config': JSON.stringify({ layout: 'month_view', useSlotsViewOnSmallScreen: 'true' }),
+};
+
 const agenda = [
   { icon: Target, title: 'your money picture', note: 'where you are now, and the one goal that matters most.' },
   { icon: Repeat, title: 'the system', note: 'how i automate everything: 401k before the paycheck, savings buckets, net spend tracking.' },
@@ -56,7 +66,7 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
           <h1>build your <em class="accent">dashboard</em> with me.</h1>
           <p class="lede">a {minutes}-minute working session where we build your personal finance dashboard together, using your real numbers.</p>
           <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
-            <a class="btn-solid group" href={cal}>
+            <a class="btn-solid group" href={cal} {...calAttrs}>
               book your session
               <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden="true" />
             </a>
@@ -126,7 +136,7 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
       </section>
 
       <section class="reveal cta" id="final-cta">
-        <a class="btn-solid group w-full justify-center py-4 text-lg" href={cal}>
+        <a class="btn-solid group w-full justify-center py-4 text-lg" href={cal} {...calAttrs}>
           book your session · ${price}
           <ArrowRight className="h-5 w-5 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden="true" />
         </a>
@@ -144,8 +154,22 @@ const dashboardHref = hasUrl(molzLifeHref) ? molzLifeHref : '#sample';
       <span class="inline-flex items-center gap-1.5 text-sm tabular-nums text-ink-soft">
         <Clock className="h-4 w-4" aria-hidden="true" /> {minutes} min · ${price}
       </span>
-      <a class="btn-solid px-5 py-2.5 text-sm" href={cal}>book your session</a>
+      <a class="btn-solid px-5 py-2.5 text-sm" href={cal} {...calAttrs}>book your session</a>
     </div>
+
+    <!-- cal.com element-click embed. colors match --molz-solid (light) and dark --molz -->
+    <script is:inline define:vars={{ calNamespace }}>
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; const s = d.head.appendChild(d.createElement("script")); s.src = A; s.onload = function () { C.__calReady = true; }; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", calNamespace, { origin: "https://app.cal.com" });
+      Cal.config = Cal.config || {};
+      Cal.config.forwardQueryParams = true;
+      Cal.ns[calNamespace]("ui", { cssVarsPerTheme: { light: { "cal-brand": "#B94A33" }, dark: { "cal-brand": "#E4725A" } }, hideEventTypeDetails: false, layout: "month_view" });
+      // once cal is loaded, stop the link from also navigating away; before that, the link just works
+      document.addEventListener("click", function (e) {
+        const a = e.target instanceof Element && e.target.closest("a[data-cal-link]");
+        if (a && window.__calReady && !(e.metaKey || e.ctrlKey || e.shiftKey)) e.preventDefault();
+      }, true);
+    </script>
 
     <script>
       import { observeReveals } from '../scripts/reveal';
