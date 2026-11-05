@@ -3,12 +3,12 @@
 // a value set to null shows "not synced yet" (or hides) instead of a made-up number.
 
 // shows once, at the top of every page: "est. 2021 · updated oct 12". change it when you update numbers.
-export const siteUpdated = 'nov 4';
+export const siteUpdated = 'nov 5';
 
 export type LinkItem = { label: string; href: string; badge?: string; primary?: boolean };
 
 export const netWorth = {
-  current: 266335,
+  current: 271749,
   goal: 300000,
   goalLabel: '300k by 30',
   goalDate: 'feb 3', // shows as "by feb 3"
@@ -44,7 +44,7 @@ export const bento = {
     href: molzLifeHref,
     // pre-tax savings rate: retirement + hsa contributions as a share of gross pay.
     // doesn't count anything saved from take-home. null hides the ring.
-    savingsRate: 28.9 as number | null,
+    savingsRate: 29.9 as number | null,
     savingsLabel: 'saved before taxes',
     savingsNote: 'retirement + hsa, as a share of gross pay',
   },
