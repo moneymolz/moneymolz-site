@@ -8,7 +8,7 @@ export const siteUpdated = 'nov 12';
 export type LinkItem = { label: string; href: string; badge?: string; primary?: boolean };
 
 export const netWorth = {
-  current: 268962,
+  current: 274477,
   goal: 300000,
   goalLabel: '300k by 30',
   goalDate: 'feb 3', // shows as "by feb 3"
