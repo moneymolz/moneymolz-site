@@ -145,7 +145,7 @@ export const stages: MapStage[] = [
     details: [{ label: 'retirement', value: 'maxed' }, { label: 'hsa', value: 'maxed' }],
   },
   {
-    id: 'hub', col: 2, eyebrow: 'the hub', title: 'robinhood checking',
+    id: 'hub', col: 2, eyebrow: 'the hub', title: 'checking',
     headline: 'the hub. bills and rent flow out of here',
     note: 'everything else is funded from this one account.',
     details: [
@@ -155,12 +155,12 @@ export const stages: MapStage[] = [
     ],
   },
   {
-    id: 'savings', col: 3, eyebrow: 'set aside', title: 'robinhood savings',
+    id: 'savings', col: 3, eyebrow: 'set aside', title: 'savings',
     headline: 'travel + gift buckets',
     details: [{ label: 'travel', value: 'bucket' }, { label: 'gifts', value: 'bucket' }],
   },
   {
-    id: 'brokerage', col: 3, eyebrow: 'held', title: 'fidelity brokerage',
+    id: 'brokerage', col: 3, eyebrow: 'held', title: 'brokerage',
     headline: 'emergency fund + wedding bucket',
     details: [{ label: 'emergency fund', value: 'bucket' }, { label: 'wedding bucket', value: 'bucket' }],
   },
