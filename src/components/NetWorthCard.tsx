@@ -88,10 +88,10 @@ export function NetWorthCard({ netWorth, goal, goalLabel, goalDate, monthDelta, 
               style={{ left: `${pct}%` }}
             >
               i am here
-              {/* arrow tip is the svg's bottom corner, so it lands on the end of the bar */}
-              <svg width="22" height="20" viewBox="0 0 22 20" fill="none" className={`shrink-0 translate-y-1.5 ${flip ? '-scale-x-100' : ''}`}>
-                <path d="M1 4c9 0 16 4 20 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M16.5 16 21 19.5l.5-5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              {/* arrow tip sits at the svg's right edge, just above the end of the bar */}
+              <svg width="25" height="24" viewBox="0 0 25 24" fill="none" className={`-mr-px shrink-0 overflow-visible ${flip ? '-scale-x-100' : ''}`}>
+                <path d="M1 8C12 6 21 11 24 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M19.4 18.2 24 22l1-5.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
           </div>
